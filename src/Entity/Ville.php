@@ -16,7 +16,7 @@ class Ville
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $nomville = null;
+    private ?string $nomVille = null;
 
     #[ORM\Column]
     private ?int $codePostal = null;
@@ -34,14 +34,14 @@ class Ville
         return $this->id;
     }
 
-    public function getNomville(): ?string
+    public function getNomVille(): ?string
     {
-        return $this->nomville;
+        return $this->nomVille;
     }
 
-    public function setNomville(string $nomville): static
+    public function setNomVille(string $nomVille): static
     {
-        $this->nomville = $nomville;
+        $this->nomVille = $nomVille;
 
         return $this;
     }
