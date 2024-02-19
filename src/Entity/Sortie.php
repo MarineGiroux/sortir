@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -17,18 +18,23 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    //#[Assert\NotBlank(message: "Le nom de la sortie est obligatoire")]
     private ?string $nomSortie = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    //#[Assert\NotBlank(message: "La date de début est obligatoire")]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    //#[Assert\NotBlank(message: "La date limite d'inscription est obligatoire")]
+    //#[Assert\LessThanOrEqual(propertyPath: 'dateHeureDebut', message: "La date doit être inférieur ou égale à la date de la sortie")]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column]
+    //#[Assert\NotBlank(message: "Le nombre de personne maxi est obligatoire")]
     private ?int $nbInscriptionMax = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

@@ -6,6 +6,7 @@ use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LieuRepository::class)]
 class Lieu
@@ -16,6 +17,7 @@ class Lieu
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+//    #[Assert\NotBlank(message: "Le lieu doit être informé")]
     private ?string $nomLieu = null;
 
     #[ORM\Column(length: 255, nullable: true)]

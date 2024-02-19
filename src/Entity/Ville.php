@@ -6,8 +6,10 @@ use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
+//#[ORM\HasLifecycleCallbacks]
 class Ville
 {
     #[ORM\Id]
@@ -16,9 +18,11 @@ class Ville
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    //#[Assert\NotBlank(message: "La ville doit être informé")]
     private ?string $nomVille = null;
 
     #[ORM\Column]
+    //#[Assert\NotBlank(message: "Le code postal doit être informé")]
     private ?int $codePostal = null;
 
     #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville')]
