@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% form_theme sortieform 'bootstrap_5_layout.html.twig' %}
+{% form_theme lieuform 'bootstrap_5_layout.html.twig' %}
+{% form_theme villeform 'bootstrap_5_layout.html.twig' %}
+{% form_theme siteform 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Modification Sortie{% endblock %}
+
+{% block body %}
+
+    <h2>Modifier la sortie : </h2>
+
+    {{ form_start(sortieform) }}
+    {{ form_widget(sortieform) }}
+    {{ form_errors(sortieform) }}
+    {{ form_end(sortieform) }}
+
+    {{ form_start(siteform) }}
+    {{ form_widget(siteform) }}
+    {{ form_errors(siteform) }}
+    {{ form_end(siteform) }}
+
+    {{ form_start(villeform) }}
+    {{ form_widget(villeform) }}
+    {{ form_errors(villeform) }}
+    {{ form_end(villeform) }}
+
+    {{ form_start(lieuform) }}
+    {{ form_widget(lieuform) }}
+    {{ form_errors(lieuform) }}
+    {{ form_end(lieuform) }}
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% form_theme sortieform 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Créer Sortie{% endblock %}
+
+{% block body %}
+
+    <h2>Créer une sortie</h2>
+
+    {{ form_start(sortieform) }}
+    {{ form_widget(sortieform) }}
+    {{ form_end(sortieform) }}
+
+
+{#<button type="submit" class="btn">Enregistrer</button>#}
+{#    <a type="submit" class="btn btn-outline-secondary" href="{{ path('app_sortie_create') }}">Enregistrer</a>#}
+    <a type="button" class="btn btn-outline-secondary" href="{{ path('app_sortie_create') }}">Publier la sortie</a>
+    <a type="button" class="btn btn-outline-danger" href="{{ path('app_home') }}" onclick="return confirm('Etes-vous sûr ?')">Annuler</a>
+
+{% endblock %}
