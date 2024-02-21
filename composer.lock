@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7b789ff112ba54cf8655f041b22cf24",
+    "content-hash": "4c67e372be10946d1d10ed4d3bb595dd",
     "packages": [
         {
             "name": "composer/semver",
@@ -1472,6 +1472,46 @@
                 }
             ],
             "time": "2023-10-27T15:32:31+00:00"
+        },
+        {
+            "name": "olelishna/emailverifier",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/olelishna/emailverifier.git",
+                "reference": "8246f081f454c2019078db3c456ba4c29ef7e95a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/olelishna/emailverifier/zipball/8246f081f454c2019078db3c456ba4c29ef7e95a",
+                "reference": "8246f081f454c2019078db3c456ba4c29ef7e95a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Olelishna\\EmailVerifier\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Olga Svistunova",
+                    "email": "olelishna@gmail.com"
+                }
+            ],
+            "description": "Email Verifier",
+            "support": {
+                "issues": "https://github.com/olelishna/emailverifier/issues",
+                "source": "https://github.com/olelishna/emailverifier/tree/v2.0.0"
+            },
+            "time": "2022-05-27T17:35:30+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
