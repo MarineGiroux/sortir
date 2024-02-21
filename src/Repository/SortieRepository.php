@@ -21,20 +21,25 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-//    /**
-//     * @return Sortie[] Returns an array of Sortie objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Sortie[] Returns an array of Sortie objects
+     */
+    public function filterSorties($idSite,$dateDebut, $dateFin): array
+    {
+        $sortie = new Sortie();
+        $sortie->setSite($idSite);
+        return $this->createQueryBuilder('sortie')
+            ->where('sortie.site = :idSite')
+            ->setParameter('idSite', $nomSite)
+            ->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
+            ->orderBy('sortie.dateHeureDebut', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Sortie
 //    {
