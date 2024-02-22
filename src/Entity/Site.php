@@ -19,17 +19,20 @@ class Site
     #[ORM\Column(length: 255)]
     private ?string $nomSite = null;
 
-    #[ORM\OneToMany(targetEntity: Participant::class, mappedBy: 'site')]
-    private Collection $participants;
+
 
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'site')]
     private Collection $sorties;
 
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'site')]
+    private Collection $users;
+
     public function __construct()
     {
-        $this->participants = new ArrayCollection();
-        $this->sorties = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -48,35 +51,6 @@ class Site
         return $this;
     }
 
-    /**
-     * @return Collection<int, Participant>
-     */
-    public function getParticipants(): Collection
-    {
-        return $this->participants;
-    }
-
-    public function addParticipant(Participant $participant): static
-    {
-        if (!$this->participants->contains($participant)) {
-            $this->participants->add($participant);
-            $participant->setSite($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(Participant $participant): static
-    {
-        if ($this->participants->removeElement($participant)) {
-            // set the owning side to null (unless already changed)
-            if ($participant->getSite() === $this) {
-                $participant->setSite(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Sortie>
@@ -102,6 +76,36 @@ class Site
             // set the owning side to null (unless already changed)
             if ($sorty->getSite() === $this) {
                 $sorty->setSite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setSite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getSite() === $this) {
+                $user->setSite(null);
             }
         }
 

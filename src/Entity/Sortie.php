@@ -55,17 +55,23 @@ class Sortie
     #[Assert\NotBlank(message: "La ville du site est obligatoire")]
     private ?Site $site = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Participant $organisateur = null;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'sortie')]
+    private Collection $users;
 
-    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'sortiesInscrites')]
-    private Collection $participantsInscrits;
+    #[ORM\ManyToOne(inversedBy: 'organisateur')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $organisateur = null;
 
     public function __construct()
     {
-        $this->participantsInscrits = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
+
+
+
+
+
+
 
     public function getId(): ?int
     {
@@ -180,39 +186,44 @@ class Sortie
         return $this;
     }
 
-    public function getOrganisateur(): ?Participant
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addSortie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeSortie($this);
+        }
+
+        return $this;
+    }
+
+    public function getOrganisateur(): ?User
     {
         return $this->organisateur;
     }
 
-    public function setOrganisateur(?Participant $organisateur): static
+    public function setOrganisateur(?User $organisateur): static
     {
         $this->organisateur = $organisateur;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Participant>
-     */
-    public function getParticipantsInscrits(): Collection
-    {
-        return $this->participantsInscrits;
-    }
 
-    public function addParticipantsInscrit(Participant $participantsInscrit): static
-    {
-        if (!$this->participantsInscrits->contains($participantsInscrit)) {
-            $this->participantsInscrits->add($participantsInscrit);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipantsInscrit(Participant $participantsInscrit): static
-    {
-        $this->participantsInscrits->removeElement($participantsInscrit);
-
-        return $this;
-    }
 }
