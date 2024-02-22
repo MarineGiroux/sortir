@@ -52,9 +52,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('userId', $this->getUser()->getId());
         }
 
-        }else{
 
-        }
 
         return $qb
             ->orderBy('sortie.dateHeureDebut', 'ASC')
