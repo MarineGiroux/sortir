@@ -24,8 +24,10 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @return Sortie[] Returns an array of Sortie objects
      */
-    public function filterSorties($idSite, $nomContient, $dateDebut, $dateFin): array
+    public function filterSorties($idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $estInscrit, $nEstPasInscrit, $estPassee): array
     {
+
+
         $qb = $this->createQueryBuilder('sortie')
                 ->where('sortie.site = :idSite')
                 ->setParameter('idSite', $idSite);
@@ -40,6 +42,19 @@ class SortieRepository extends ServiceEntityRepository
                     ->setParameter('dateDebut', $dateDebut)
                     ->setParameter('dateFin', $dateFin);
             }
+//        $estOrganisateur =$form->get('organisateurOuPas')->getData();
+//        $estInscrit =$form->get('inscritOuPas')->getData();
+//        $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
+//        $estPassee =$form->get('passeesOuPas')->getData();
+
+        if($estOrganisateur){
+            $qb->andWhere('sortie.organisateur.id = :userId')
+                ->setParameter('userId', $this->getUser()->getId());
+        }
+
+        }else{
+
+        }
 
         return $qb
             ->orderBy('sortie.dateHeureDebut', 'ASC')

@@ -33,9 +33,12 @@ class SortiesDisplayFilterController extends AbstractController
             $nomContient = $form->get('nomSortieContient')->getData();
             $dateDebut = $form->get('dateDebutSorties')->getData();
             $dateFin = $form->get('dateFinSorties')->getData();
+            $estOrganisateur =$form->get('organisateurOuPas')->getData();
+            $estInscrit =$form->get('inscritOuPas')->getData();
+            $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
+            $estPassee =$form->get('passeesOuPas')->getData();
 
 
-//            dd($nomContient);
 
 
             return $this->render('sorties_display_filter/index.html.twig', [
