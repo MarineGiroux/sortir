@@ -86,19 +86,47 @@ class SortieController extends AbstractController
         }
 
         return $this->render('sortie/update.html.twig', [
-            'sortieform' => $form
+            'sortieform' => $form, 'sortie' => $sortie
         ]);
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
-            $request->request->get('submitAction') == 'delete';
             $entityManager->remove($sortie);
             $entityManager->flush();
 
         return $this->redirectToRoute('app_home');
     }
+
+    #[Route('/annuler/{id}', name: '_annuler', requirements: ['id' => '\d+'])]
+    public function annuler(Request $request, EntityManagerInterface $entityManager,Sortie $sortie, EtatRepository $etatRepository, Security $security): Response
+    {
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
+        $userRepository = $security->getUser();
+        $sortie->setOrganisateur($userRepository);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($request->request->get('submitAction') == 'annuler') {
+                $sortie->setEtat($etatRepository->find(6));
+
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_home');
+            }
+
+
+        }
+        return $this->render('sortie/cancel.html.twig', [
+            'sortieform' => $form, 'sortie' => $sortie
+        ]);
+    }
+
 
 
 }

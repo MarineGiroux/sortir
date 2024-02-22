@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sorties/display/filter')]
+//#[Route('/sorties/display/filter')]
 class SortiesDisplayFilterController extends AbstractController
 {
-    #[Route('/', name: 'app_sorties_display_filter_index', methods: ['GET', 'POST'])]
+    #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
 
@@ -38,19 +38,14 @@ class SortiesDisplayFilterController extends AbstractController
             $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
             $estPassee =$form->get('passeesOuPas')->getData();
 
-
-
-
-            return $this->render('sorties_display_filter/index.html.twig', [
-                'sorties' => $sortieRepository->filterSorties($idSite,$nomContient,$dateDebut,$dateFin),
+            return $this->render('sortie/list.html.twig', [
+                'sortie' => $sortieRepository->filterSorties($idSite,$nomContient,$dateDebut,$dateFin),
                 'form' => $form,
             ]);
         }
 
-
-
-        return $this->render('sorties_display_filter/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),
+        return $this->render('sortie/index.html.twig', [
+            'sortie' => $sortieRepository->findAll(),
             'form' => $form,
         ]);
     }

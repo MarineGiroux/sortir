@@ -62,6 +62,9 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?User $organisateur = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $motif = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -221,6 +224,18 @@ class Sortie
     public function setOrganisateur(?User $organisateur): static
     {
         $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getMotif(): ?string
+    {
+        return $this->motif;
+    }
+
+    public function setMotif(?string $motif): static
+    {
+        $this->motif = $motif;
 
         return $this;
     }

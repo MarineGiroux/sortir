@@ -10,10 +10,11 @@
     {{ form_start(sortieform) }}
     {{ form_widget(sortieform) }}
 
-    <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary"  >Créer la Sortie</button>
+    <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary"  >Enregistrer</button>
     <button type="submit" name="submitAction"  value="ouvrir" class="btn btn-outline-secondary">Ouvrir la sortie</button>
-{#    <a href="{{ path('app_sortie_delete', {'id' : sortie.id }) }}" onclick="return confirm('Etes-vous sûr ?')"><button type="submit" name="submitAction"  value="delete" class="btn btn-outline-danger">Supprimer la sortie</button></a>#}
-    <a href="{{ path('app_home') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Annuler</button>
+    <a href="{{ path('app_sortie_delete', {'id' : sortie.id }) }}" class="btn btn-outline-danger" onclick="return confirm('Etes-vous sûr ?')">Supprimer la sortie</a>
+    <a href="{{ path('app_sortie_annuler', {'id' : sortie.id }) }}"><button type="button" name="annuler" class="btn btn-outline-danger">Annuler la sortie</button></a>
+    <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour page d'accueil</button></a>
 
 
     {{ form_end(sortieform) }}

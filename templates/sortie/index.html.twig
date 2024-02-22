@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Sortie index{% endblock %}
+
+{% block body %}
+
+    <h1>Filtrer les sorties</h1>
+
+
+
+    <div>
+        <h3>Date du jour : {{ "now"|date("d/m/Y") }}</h3>
+        <h3>Participant : {{ app.user.nom }} {{ app.user.prenom }}</h3>
+    </div>
+
+
+    {{ form_start(form) }}
+
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+
+    {{ form_end(form) }}
+
+    <p>Nom de l'user : {{ app.user.nom }}</p>
+    <p>Site de l'user : {{ app.user.site.nomSite }} </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Cloture</th>
+                <th>Nombre maxi d'inscriptions</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for sortie in sortie %}
+            <tr>
+                    <td>{{ sortie.nomSortie }}</td>
+                    <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : '' }}</td>
+                    <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
+                    <td>{{ sortie.nbInscriptionMax }}</td>
+                    <td>{{ sortie.etat.libelle }}</td>
+                {% if sortie.organisateur.id == app.user.id %}
+                    <td> X </td>
+                {% else %}
+                    <td>   </td>
+                {% endif %}
+                    <td>{{ sortie.organisateur.nom }}</td>
+                    <td>
+                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}">Modifier</a>
+                        {% if sortie.etat.libelle != 'Annulée'  %}
+                            <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}">Annuler</a>
+                        {% endif %}
+                            <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}">Afficher</a>
+                    </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+
+<a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
+
+
+{% endblock %}
