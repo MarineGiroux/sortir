@@ -17,7 +17,7 @@ class Etat
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-//    #[Assert\NotBlank(message: "L'état est obligatoire'")]
+    #[Assert\NotBlank(message: "L'état est obligatoire'")]
     private ?string $libelle = null;
 
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'etat')]
@@ -38,7 +38,7 @@ class Etat
         return $this->libelle;
     }
 
-    public function setLibelle(string $libelle): static
+    public function setLibelle(?string $libelle): static
     {
         $this->libelle = $libelle;
 

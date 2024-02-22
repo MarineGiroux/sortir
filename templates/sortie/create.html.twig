@@ -7,14 +7,21 @@
 
     <h2>Créer une sortie</h2>
 
+
+
     {{ form_start(sortieform) }}
     {{ form_widget(sortieform) }}
+
+
+    <p>Ville organisatrice : {{ app.user.site.nomSite }}</p>
+
+
+    <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary">Créer la Sortie</button>
+    <button type="submit" name="submitAction"  value="ouvrir" class="btn btn-outline-secondary">Ouvrir la sortie</button>
+    <a href="{{ path('app_home') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Annuler</button></a>
+
     {{ form_end(sortieform) }}
 
 
-{#<button type="submit" class="btn">Enregistrer</button>#}
-{#    <a type="submit" class="btn btn-outline-secondary" href="{{ path('app_sortie_create') }}">Enregistrer</a>#}
-    <a type="button" class="btn btn-outline-secondary" href="{{ path('app_sortie_create') }}">Publier la sortie</a>
-    <a type="button" class="btn btn-outline-danger" href="{{ path('app_home') }}" onclick="return confirm('Etes-vous sûr ?')">Annuler</a>
 
 {% endblock %}

@@ -15,16 +15,20 @@ class LieuType extends AbstractType
     {
         $builder
             ->add('rue', TextType::class,[
-                'label' => 'Rue :'
+                'label' => 'Rue :',
+                'required' => false,
             ])
             ->add('nomLieu', TextType::class,[
-                'label' => 'Lieu :'
+                'label' => 'Lieu :',
+                'required' => false,
             ])
             ->add('latitude', IntegerType::class,[
-                'label' => 'Latitude :'
+                'label' => 'Latitude :',
+                'required' => false,
             ])
             ->add('longitude', IntegerType::class,[
-                'label' => 'Longitude :'
+                'label' => 'Longitude :',
+                'required' => false,
             ])
         ;
     }
