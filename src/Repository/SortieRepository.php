@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -24,9 +25,8 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @return Sortie[] Returns an array of Sortie objects
      */
-    public function filterSorties($idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $estInscrit, $nEstPasInscrit, $estPassee): array
+    public function filterSorties($idUser, $idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur): array
     {
-
 
         $qb = $this->createQueryBuilder('sortie')
                 ->where('sortie.site = :idSite')
@@ -38,7 +38,7 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if($dateDebut && $dateFin){
-                $qb->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
+            $qb->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
                     ->setParameter('dateDebut', $dateDebut)
                     ->setParameter('dateFin', $dateFin);
             }
@@ -48,8 +48,8 @@ class SortieRepository extends ServiceEntityRepository
 //        $estPassee =$form->get('passeesOuPas')->getData();
 
         if($estOrganisateur){
-            $qb->andWhere('sortie.organisateur.id = :userId')
-                ->setParameter('userId', $this->getUser()->getId());
+            $qb->andWhere('sortie.organisateur = :idUser')
+                ->setParameter('idUser', $idUser);
         }
 
 

@@ -19,13 +19,11 @@ class SortiesDisplayFilterController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
-
-
         $sortie = new Sortie();
-
+        $idUser= $this->getUser()->getId();
         $form = $this->createForm(SortieSearchType::class, $sortie);
-
-        $form->handleRequest($request);
+        
+        $form->handleRequest($request);        
 
         if ($form->isSubmitted()) {
 
@@ -38,8 +36,11 @@ class SortiesDisplayFilterController extends AbstractController
             $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
             $estPassee =$form->get('passeesOuPas')->getData();
 
-            return $this->render('sortie/list.html.twig', [
-                'sortie' => $sortieRepository->filterSorties($idSite,$nomContient,$dateDebut,$dateFin),
+
+
+
+            return $this->render('sorties_display_filter/index.html.twig', [
+                'sorties' => $sortieRepository->filterSorties($idUser,$idSite,$nomContient,$dateDebut,$dateFin,$estOrganisateur),
                 'form' => $form,
             ]);
         }
