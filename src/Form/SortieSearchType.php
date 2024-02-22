@@ -12,6 +12,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,17 +28,17 @@ class SortieSearchType extends AbstractType
                 'class' => Site::class,
                 'choice_label' => 'nomSite',
             ])
-            ->add('nomSortieContient', TextType::class,[
+            ->add('nomSortieContient', SearchType::class,[
                 'mapped'=>false,
                 'required'=>false,
                 'label'=>"Le nom de la sortie contient:",
             ])
-            ->add('dateDebutSorties', DateTimeType::class,[
+            ->add('dateDebutSorties', DateType::class,[
                 'mapped'=>false,
                 'required'=>false,
                 'label'=>"Entre:",
             ])
-            ->add('dateFinSorties', DateTimeType::class,[
+            ->add('dateFinSorties', DateType::class,[
                 'mapped'=>false,
                 'required'=>false,
                 'label'=>"et:",
@@ -65,7 +67,10 @@ class SortieSearchType extends AbstractType
 
                 'label'=>"Sorties passées"
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class,[
+                'label'=>"Rechercher"
+
+            ])
         ;
     }
 

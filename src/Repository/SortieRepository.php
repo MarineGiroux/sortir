@@ -24,16 +24,24 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @return Sortie[] Returns an array of Sortie objects
      */
-    public function filterSorties($idSite,$dateDebut, $dateFin): array
+    public function filterSorties($idSite, $nomContient, $dateDebut, $dateFin): array
     {
-        $sortie = new Sortie();
-        $sortie->setSite($idSite);
-        return $this->createQueryBuilder('sortie')
-            ->where('sortie.site = :idSite')
-            ->setParameter('idSite', $nomSite)
-            ->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
-            ->setParameter('dateDebut', $dateDebut)
-            ->setParameter('dateFin', $dateFin)
+        $qb = $this->createQueryBuilder('sortie')
+                ->where('sortie.site = :idSite')
+                ->setParameter('idSite', $idSite);
+
+        if($nomContient){
+            $qb->andWhere("sortie.nomSortie LIKE :nomContient")
+                ->setParameter('nomContient', '%'.$nomContient.'%');
+        }
+
+        if($dateDebut && $dateFin){
+                $qb->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
+                    ->setParameter('dateDebut', $dateDebut)
+                    ->setParameter('dateFin', $dateFin);
+            }
+
+        return $qb
             ->orderBy('sortie.dateHeureDebut', 'ASC')
             ->setMaxResults(10)
             ->getQuery()

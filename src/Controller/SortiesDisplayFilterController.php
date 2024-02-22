@@ -29,15 +29,17 @@ class SortiesDisplayFilterController extends AbstractController
 
         if ($form->isSubmitted()) {
 
-            $idSite = $form->get('site')->getData()->getIdSite();
+            $idSite = $form->get('site')->getData()->getId();
+            $nomContient = $form->get('nomSortieContient')->getData();
             $dateDebut = $form->get('dateDebutSorties')->getData();
             $dateFin = $form->get('dateFinSorties')->getData();
 
-//            dd($nomSite);
+
+//            dd($nomContient);
 
 
             return $this->render('sorties_display_filter/index.html.twig', [
-                'sorties' => $sortieRepository->filterSorties($idSite,$dateDebut,$dateFin),
+                'sorties' => $sortieRepository->filterSorties($idSite,$nomContient,$dateDebut,$dateFin),
                 'form' => $form,
             ]);
         }
