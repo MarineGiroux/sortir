@@ -17,7 +17,6 @@ class Site
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    //#[Assert\NotBlank(message: "La ville du site est obligatoire")]
     private ?string $nomSite = null;
 
 
@@ -45,7 +44,7 @@ class Site
         return $this->nomSite;
     }
 
-    public function setNomSite(string $nomSite): static
+    public function setNomSite(?string $nomSite): static
     {
         $this->nomSite = $nomSite;
 

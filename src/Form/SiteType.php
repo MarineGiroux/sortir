@@ -14,7 +14,8 @@ class SiteType extends AbstractType
     {
         $builder
             ->add('nomSite', TextType::class,[
-                'label' => 'Ville Organisatrice :'
+                'label' => 'Ville Organisatrice :',
+                'required' => false,
             ])
         ;
     }

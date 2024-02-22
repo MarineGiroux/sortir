@@ -18,23 +18,25 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    //#[Assert\NotBlank(message: "Le nom de la sortie est obligatoire")]
+    #[Assert\NotBlank(message: "Le nom de la sortie est obligatoire")]
     private ?string $nomSortie = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    //#[Assert\NotBlank(message: "La date de début est obligatoire")]
+    #[Assert\GreaterThan('today UTC', message: "La date doit être supérieure à aujourd'hui")]
+    #[Assert\NotNull(message: "La date de début est obligatoire")]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    //#[Assert\NotBlank(message: "La date limite d'inscription est obligatoire")]
-    //#[Assert\LessThanOrEqual(propertyPath: 'dateHeureDebut', message: "La date doit être inférieur ou égale à la date de la sortie")]
+    #[Assert\GreaterThan('today UTC', message: "La date doit être supérieure à aujourd'hui")]
+    #[Assert\NotNull(message: "La date limite d'inscription est obligatoire")]
+    #[Assert\LessThanOrEqual(propertyPath: 'dateHeureDebut', message: "La date doit être inférieur ou égale à la date de la sortie")]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column]
-    //#[Assert\NotBlank(message: "Le nombre de personne maxi est obligatoire")]
+    #[Assert\NotBlank(message: "Le nombre de personne maxi est obligatoire")]
     private ?int $nbInscriptionMax = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -50,6 +52,7 @@ class Sortie
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: "La ville du site est obligatoire")]
     private ?Site $site = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'sortie')]
@@ -92,7 +95,7 @@ class Sortie
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): static
+    public function setDateHeureDebut(?\DateTimeInterface $dateHeureDebut): static
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
@@ -116,7 +119,7 @@ class Sortie
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): static
+    public function setDateLimiteInscription(?\DateTimeInterface $dateLimiteInscription): static
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 
@@ -128,7 +131,7 @@ class Sortie
         return $this->nbInscriptionMax;
     }
 
-    public function setNbInscriptionMax(int $nbInscriptionMax): static
+    public function setNbInscriptionMax(?int $nbInscriptionMax): static
     {
         $this->nbInscriptionMax = $nbInscriptionMax;
 

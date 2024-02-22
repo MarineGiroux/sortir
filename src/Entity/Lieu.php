@@ -17,7 +17,7 @@ class Lieu
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-//    #[Assert\NotBlank(message: "Le lieu doit être informé")]
+    #[Assert\NotBlank(message: "Le lieu doit être informé")]
     private ?string $nomLieu = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -51,7 +51,7 @@ class Lieu
         return $this->nomLieu;
     }
 
-    public function setNomLieu(string $nomLieu): static
+    public function setNomLieu(?string $nomLieu): static
     {
         $this->nomLieu = $nomLieu;
 
