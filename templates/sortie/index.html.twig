@@ -7,19 +7,12 @@
 
     <h1>Filtrer les sorties</h1>
 
-
-
     <div>
         <h3>Date du jour : {{ "now"|date("d/m/Y") }}</h3>
         <h3>Participant : {{ app.user.nom }} {{ app.user.prenom }}</h3>
     </div>
 
-
     {{ form_start(form) }}
-
-        {{ form_label(form) }}
-        {{ form_widget(form) }}
-        {{ form_errors(form) }}
 
     {{ form_end(form) }}
 
