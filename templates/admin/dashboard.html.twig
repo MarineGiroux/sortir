@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block body %}
+
+    <h1>Dashboard administrateur </h1>
+
+
+
+    <h3><a href="{{ path('app_user_list') }}"> Afficher Utilisateur</a></h3>
+
+    <h3><a href=""> Rendre innactif Utilisateur</a></h3>
+    <h3><a href=""> Supprimer sorties</a></h3>
+    <h3><a href=""> Gérer les villes</a></h3>
+    <h3><a href=""> Gérer les sites</a></h3>
+
+{% endblock %}
+ {% block title %}{{ parent() }} | Dashboard{% endblock %}

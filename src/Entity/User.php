@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -20,6 +21,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email( message: 'Le format d\'email n\'est pas conforme.' )]
+    #[Assert\Regex('/^[a-zA-Z0-9._%+-]+@eni\.fr$/', message: 'Utilisateur non autorisé')]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -38,6 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Regex(' /^[0][0-9]{9}$/ ', message: 'Format de num de tél incorrecte')]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -56,6 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur')]
     private Collection $organisateur;
+
+    #[ORM\Column(length: 50)]
+    private ?string $pseudo = null;
 
     public function __construct()
     {
@@ -255,6 +262,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $organisateur->setOrganisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
