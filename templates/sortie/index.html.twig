@@ -9,15 +9,23 @@
 
     <div>
         <h3>Date du jour : {{ "now"|date("d/m/Y") }}</h3>
-        <h3>Participant : {{ app.user.nom }} {{ app.user.prenom }}</h3>
+        <h3>Participant : {% if app.user.nom is defined %}
+                {{ app.user.nom }}
+            {% else %}
+                Non connecté
+            {% endif %}
+        </h3>
     </div>
 
-    {{ form_start(form) }}
+    {% if app.user.id is defined %}
 
-    {{ form_end(form) }}
+        {{ form_start(form) }}
 
-    <p>Nom de l'user : {{ app.user.nom }}</p>
-    <p>Site de l'user : {{ app.user.site.nomSite }} </p>
+        {{ form_end(form) }}
+
+    {% endif %}
+
+
 
     <table class="table">
         <thead>
@@ -41,20 +49,28 @@
                     <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
                     <td>{{ sortie.nbInscriptionMax }}</td>
                     <td>{{ sortie.etat.libelle }}</td>
-                {% if sortie.organisateur.id == app.user.id %}
-                    <td> X </td>
-                {% else %}
-                    <td>   </td>
-                {% endif %}
-                    <td>{{ sortie.organisateur.nom }}</td>
+
                     <td>
-                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}">Modifier</a>
-                        {% if sortie.etat.libelle != 'Annulée'  %}
-                            <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}">Annuler</a>
+                        {% if app.user.id is defined %}
+                            {% if sortie.organisateur.id == app.user.id %}
+                                <td> X </td>
+                            {% else %}
+                                <td>  </td>
+                            {% endif %}
+                        {% else %}
+                            <td>  </td>
                         {% endif %}
-                            <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}">Afficher</a>
                     </td>
-            </tr>
+
+                    <td>{{ sortie.organisateur.nom }}</td>
+                        <td>
+                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}">Modifier</a>
+                            {% if sortie.etat.libelle != 'Annulée'  %}
+                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}">Annuler</a>
+                            {% endif %}
+                                <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}">Afficher</a>
+                        </td>
+                </tr>
         {% else %}
             <tr>
                 <td colspan="8">no records found</td>

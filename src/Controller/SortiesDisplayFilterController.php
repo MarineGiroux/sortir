@@ -20,7 +20,12 @@ class SortiesDisplayFilterController extends AbstractController
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
         $sortie = new Sortie();
-        $idUser= $this->getUser()->getId();
+
+        $user = $this->getUser();
+        if ($user){
+            $idUser= $this->getUser()->getId();
+        }
+
         $form = $this->createForm(SortieSearchType::class, $sortie);
         
         $form->handleRequest($request);        
