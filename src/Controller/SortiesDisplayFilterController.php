@@ -41,9 +41,6 @@ class SortiesDisplayFilterController extends AbstractController
             $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
             $estPassee =$form->get('passeesOuPas')->getData();
 
-
-
-
             return $this->render('sortie/index.html.twig', [
                 'sortie' => $sortieRepository->filterSorties($idUser,$idSite,$nomContient,$dateDebut,$dateFin,$estOrganisateur),
                 'form' => $form,
@@ -55,8 +52,6 @@ class SortiesDisplayFilterController extends AbstractController
             'form' => $form,
         ]);
     }
-
-
 
     #[Route('/new', name: 'app_sorties_display_filter_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
