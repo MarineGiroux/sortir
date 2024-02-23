@@ -38,7 +38,7 @@ class SortiesDisplayFilterController extends AbstractController
 
 
 
-            return $this->render('sorties_display_filter/index.html.twig', [
+            return $this->render('sortie/index.html.twig', [
                 'sorties' => $sortieRepository->filterSorties($idUser,$idSite,$nomContient,$dateDebut,$dateFin,$estOrganisateur),
                 'form' => $form,
             ]);
