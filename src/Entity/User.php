@@ -217,12 +217,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeSortie(Sortie $sortie): static
-    {
-        $this->sortie->removeElement($sortie);
-
-        return $this;
-    }
+//    public function removeSortie(Sortie $sortie): static
+//    {
+//        $this->sortie->removeElement($sortie);
+//
+//        return $this;
+//    }
 
     public function isVerified(): bool
     {
