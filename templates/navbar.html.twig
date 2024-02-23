@@ -13,6 +13,38 @@
                     <a class="nav-link" href="{{ path('app_home') }}" title="Go back to homepage"> Accueil </a>
                     <a class="nav-link" href="{{ path('app_sortie_create') }}" title="Go back to homepage"> Créer une Sortie </a>
                 </li>
+
+{#             CAS 1 :   afficher si l'utilasateur est  connecté #}
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}" title="Go back to homepage"> Se déconnecter </a>
+                    </li>
+                {% endif %}
+
+{#                CAS 2 :   afficher si c'est l'admin qui est  connecté #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_dashboard') }}" title="Go back to homepage"> Dashboard </a>
+                    </li>
+                {% endif %}
+
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_user_profile') }}" title="Go back to homepage"> Mon profil </a>
+                    </li>
+
+                    {#    CAS 3:  à afficher seulement si l'utilisateur n'est pas connecté#}
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_register') }}" title="Go back to homepage"> s'inscrire </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_login') }}" title="Go back to homepage"> se connecter </a>
+                </li>
+
+                {% endif %}
+
             </ul>
         </div>
     </div>

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+
+
+
+{% block title %}Sortir.com {% endblock %}
+
+{% block body %}
+
+    <div class="container">
+    <h2 class="text-center">ton profil {{ app.user.pseudo }}</h2>
+    <ul class="list-group">
+        <li class="list-group-item">Prénom : {{ app.user.prenom }}</li>
+        <li class="list-group-item">Nom : {{ app.user.nom }}</li>
+        <li class="list-group-item">Téléphone : {{ app.user.telephone }}</li>
+        <li class="list-group-item">Email : {{ app.user.email }}</li>
+        <li class="list-group-item">Ville de rattachement : {{ app.user.site.nomSite }}</li>
+    </ul>
+        <a href="{{ path('app_home') }}">  <button  type="reset" class="btn btn-outline-secondary">Retour</button> </a>
+        <a href="{{ path('app_user_profile_update') }}"> <button  type="reset" class="btn btn-outline-secondary">Modifier</button> </a>
+
+    </div>
+
+
+
+{% endblock %}

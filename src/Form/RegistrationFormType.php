@@ -24,6 +24,7 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('pseudo', TextType::class)
             ->add('email', TextType::class)
             ->add('nom', TextType::class, [
                 'label' => 'Nom'
@@ -34,6 +35,8 @@ class RegistrationFormType extends AbstractType
             ->add('telephone', TelType::class,[
                 'label'=>'Numéro de téléphone'
             ])
+
+            
             ->add('photo', FileType::class, [
                 'label' => 'Photo du profil',
                 'required' => false,
