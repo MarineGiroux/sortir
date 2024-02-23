@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Form\SortieSearchType;
 use App\Form\SortieType;
@@ -13,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-//#[Route('/sorties/display/filter')]
+
 class SortiesDisplayFilterController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
@@ -38,7 +37,7 @@ class SortiesDisplayFilterController extends AbstractController
             $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
             $estPassee =$form->get('passeesOuPas')->getData();
 
-            return $this->render('sortie/list.html.twig', [
+            return $this->render('sortie/index.html.twig', [
                 'sortie' => $sortieRepository->filterSorties($idSite,$nomContient,$dateDebut,$dateFin),
                 'form' => $form,
             ]);
