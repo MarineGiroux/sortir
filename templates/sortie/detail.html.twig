@@ -66,7 +66,7 @@
     <h3>Liste des participants</h3>
 
 
-    <a href="{{ path('app_inscription') }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+    <a href="{{ path('app_inscription', {'idSortie': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
 
     <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour page d'accueil</button></a>
 
