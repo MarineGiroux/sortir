@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Form\SortieSearchType;
 use App\Form\SortieType;
@@ -12,14 +13,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-
+//#[Route('/sorties/display/filter')]
 class SortiesDisplayFilterController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
         $sortie = new Sortie();
-        $idUser= $this->getUser()->getId();
+
+        $user = $this->getUser();
+        if ($user){
+            $idUser= $this->getUser()->getId();
+        }
+
         $form = $this->createForm(SortieSearchType::class, $sortie);
 
         $form->handleRequest($request);
