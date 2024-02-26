@@ -8,6 +8,7 @@ use App\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,22 +34,21 @@ class RegistrationFormType extends AbstractType
             ->add('telephone', TelType::class,[
                 'label'=>'Numéro de téléphone'
             ])
-
-            
-            ->add('photo', FileType::class, [
+            ->add('photo', HiddenType::class)
+            ->add('photo_file', FileType::class, [
                 'label' => 'Photo du profil',
                 'required' => false,
                 'mapped' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' =>'1024k',
+                        'maxSize' => '1024k',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/jpg',
                             'image/png',
                         ],
-                        'mimeTypesMessage'=>"format acceptés : jpeg, jpg et png seulement",
-                        'maxSizeMessage'=>'Fichier trop lourd'
+                        'mimeTypesMessage' => "format acceptés : jpeg, jpg et png seulement",
+                        'maxSizeMessage' => "Fichier trop lourd"
                     ])
                 ]
             ])

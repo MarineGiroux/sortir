@@ -8,11 +8,13 @@ use App\Security\AppAuthenticator;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -24,13 +26,21 @@ class RegistrationController extends AbstractController
                              UserPasswordHasherInterface $userPasswordHasher,
                              UserAuthenticatorInterface $userAuthenticator,
                              AppAuthenticator $authenticator,
-                             EntityManagerInterface $entityManager): Response
+                             EntityManagerInterface $entityManager,
+                             SluggerInterface $slugger): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($form->get('photo_file')->getData() instanceof UploadedFile) {
+                $avatarFile = $form->get('photo_file')->getData();
+                $fileName = $slugger->slug($user->getId()) . '-' . uniqid() . '.' . $avatarFile->guessExtension();
+                $avatarFile->move($this->getParameter('photo_dir'), $fileName);
+                $user->setPhoto($fileName);
+            }
 
             // encode the plain password
             $user->setPassword(

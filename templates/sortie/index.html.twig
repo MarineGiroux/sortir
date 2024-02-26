@@ -65,15 +65,9 @@
                         {% if sortie.organisateur.id == app.user.id %}
                             <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
                         {% endif %}
-                    {% endif %}
-
-                    {% if is_granted('IS_AUTHENTICATED') %}
-                        {% if sortie.organisateur.id != app.user.id %}
-                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">S'inscrire</a>
+                        {% if sortie.etat.libelle == 'Ouverte' %}
+                            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
                         {% endif %}
-                    {% endif %}
-
-                    {% if is_granted('IS_AUTHENTICATED') %}
                         {% if sortie.organisateur.id == app.user.id %}
                             {% if sortie.etat.libelle != 'Annulée'  %}
                                 <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>

@@ -9,7 +9,9 @@
 
     <div class="container">
     <h2 class="text-center">Ton profil {{ app.user.pseudo }}</h2>
-    <ul class="list-group">
+{#        <img src="{{ asset(photo_dir ~ app.user.photo) }}" width="300px" loading="lazy" />#}
+
+        <ul class="list-group">
         <li class="list-group-item">Prénom : {{ app.user.prenom }}</li>
         <li class="list-group-item">Nom : {{ app.user.nom }}</li>
         <li class="list-group-item">Téléphone : {{ app.user.telephone }}</li>

@@ -71,6 +71,28 @@
     </table>
     <br>
     <h3>Liste des participants</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Pseudo :</th>
+            <th>Nom</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for userInscrit in sortie.users %}
+            <tr>
+                <td>{{ userInscrit.pseudo }}</td>
+                <td>{{ userInscrit.nom }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">Aucun participant inscrit</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
 
     {% if sortie.etat.libelle == 'Ouverte' %}
         <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
