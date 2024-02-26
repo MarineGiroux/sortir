@@ -29,16 +29,16 @@
 
     <table class="table">
         <thead>
-        <tr>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Cloture</th>
-            <th>Inscrits/places</th>
-            <th>Etat</th>
-            <th>Inscrit</th>
-            <th>Organisateur</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Cloture</th>
+                <th>Inscrits/places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
         </thead>
 
         <tbody>
@@ -52,11 +52,13 @@
 
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <td>
-                        {% set inscrit = false %}
                         {% for user in sortie.users %}
                             {% if app.user.email == user.email %}
                                 X
-                                {% set inscrit = true %}
+                                {% set inscrit  = true %}
+                            {% else %}
+                                {% set inscrit  = false %}
+
                             {% endif %}
                         {% endfor %}
                     </td>
@@ -71,8 +73,8 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if is_granted('IS_AUTHENTICATED') %}
-                        {% if inscrit == false %}
+                    {% if is_granted('IS_AUTHENTICATED')   %}
+                        {% if inscrit is false %}
                             <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">S'inscrire</a>
                         {% endif %}
                     {% endif %}
@@ -96,7 +98,7 @@
     </table>
 
     {% if is_granted('IS_AUTHENTICATED') %}
-        <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
+    <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
     {% endif %}
 
 {% endblock %}
