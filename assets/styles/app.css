@@ -35,3 +35,12 @@ footer{
     margin: auto;
     margin-bottom : 10px;
 }
+
+.required-label::before {
+    content: ' * ';
+    color: red;
+}
+
+.h2-profil{
+    text-align: center;
+}
