@@ -32,7 +32,9 @@
             <th>Cloture</th>
             <th>Nombre maxi d'inscriptions</th>
             <th>Etat</th>
+            {% if is_granted('IS_AUTHENTICATED') %}
             <th>Inscrit ou pas?</th>
+            {% endif %}
             <th>Organisateur</th>
             <th>Actions</th>
         </tr>
@@ -56,7 +58,7 @@
                 {% endif %}
                 </td>
 
-                <td>{{ sortie.organisateur.nom }}</td>
+                <td>{{ sortie.organisateur.pseudo }}</td>
                 <td>
                     <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
                     {% if is_granted('IS_AUTHENTICATED') %}
@@ -71,9 +73,11 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if sortie.organisateur.id == app.user.id %}
-                        {% if sortie.etat.libelle != 'Annulée'  %}
-                            <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                        {% if sortie.organisateur.id == app.user.id %}
+                            {% if sortie.etat.libelle != 'Annulée'  %}
+                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </td>
