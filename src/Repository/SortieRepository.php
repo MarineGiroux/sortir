@@ -59,6 +59,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('idUser', $idUser);
         }
 
+
         return $qb
             ->orderBy('sortie.dateHeureDebut', 'ASC')
             ->setMaxResults(10)
