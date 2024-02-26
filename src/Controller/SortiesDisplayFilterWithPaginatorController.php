@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 //#[Route('/sorties/display/filter')]
-class SortiesDisplayFilterController extends AbstractController
+class SortiesDisplayFilterWithPaginatorController extends AbstractController
 {
-    #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
+    #[Route('/index2', name: 'app_home2', methods: ['GET', 'POST'])]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
 
@@ -45,13 +45,13 @@ class SortiesDisplayFilterController extends AbstractController
             $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
             $estPassee =$form->get('passeesOuPas')->getData();
 
-            return $this->render('sortie/index.html.twig', [
+            return $this->render('sortie/index.paginator.html.twig', [
                 'sortie' => $sortieRepository->filterSorties($idUser,$idSite,$nomContient,$dateDebut,$dateFin,$estOrganisateur),
                 'form' => $form,
             ]);
         }
 
-        return $this->render('sortie/index.html.twig', [
+        return $this->render('sortie/index.paginator.html.twig', [
             'sortie' => $sortieRepository->getAllSortiesWithUsers(),
             'form' => $form,
         ]);

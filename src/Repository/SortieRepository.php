@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\CountWalker;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -29,6 +31,8 @@ class SortieRepository extends ServiceEntityRepository
     {
 
         $qb = $this->createQueryBuilder('sortie')
+                ->addSelect('users')
+                ->leftJoin('sorties.users', 'users')
                 ->where('sortie.site = :idSite')
                 ->setParameter('idSite', $idSite);
 
@@ -60,6 +64,23 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function getAllSortiesWithUsers() {
+
+
+
+        $qb = $this->createQueryBuilder('sorties')
+            ->addSelect('users')
+            ->leftJoin('sorties.users', 'users')
+
+        ;
+
+
+        return $qb
+            ->getQuery()
+            ->getResult();
+
     }
 
 //    public function findOneBySomeField($value): ?Sortie

@@ -29,16 +29,16 @@
 
     <table class="table">
         <thead>
-        <tr>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Cloture</th>
-            <th>Inscrits/places</th>
-            <th>Etat</th>
-            <th>Inscrit</th>
-            <th>Organisateur</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Cloture</th>
+                <th>Inscrits/places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
         </thead>
 
         <tbody>
@@ -47,17 +47,22 @@
                 <td>{{ sortie.nomSortie }}</td>
                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : '' }}</td>
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
-                <td>{{ sortie.nbInscriptionMax }}</td>
+                <td>{{ sortie.users|length }}/{{ sortie.nbInscriptionMax }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
-                {% if is_granted('IS_AUTHENTICATED') %}
-                <td>
-                    {% if sortie.organisateur.id == app.user.id %}
-                        X
-                    {% else %}
 
-                    {% endif %}
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <td>
+                        {% for user in sortie.users %}
+                            {% if app.user.email == user.email %}
+                                X
+                                {% set inscrit  = true %}
+                            {% else %}
+                                {% set inscrit  = false %}
+
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                 {% endif %}
-                </td>
 
                 <td>{{ sortie.organisateur.nom }}</td>
                 <td>
@@ -68,8 +73,8 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if is_granted('IS_AUTHENTICATED') %}
-                        {% if inscrit == false %}
+                    {% if is_granted('IS_AUTHENTICATED')   %}
+                        {% if inscrit is false %}
                             <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">S'inscrire</a>
                         {% endif %}
                     {% endif %}
