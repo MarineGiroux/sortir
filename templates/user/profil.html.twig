@@ -9,7 +9,12 @@
 
     <div class="container">
     <h2 class="text-center">Ton profil {{ app.user.pseudo }}</h2>
-{#        <img src="{{ asset(photo_dir ~ app.user.photo) }}" width="300px" loading="lazy" />#}
+
+        {% if app.user.photo is not empty %}
+            <img src="{{ asset(photo_dir ~ '/' ~ app.user.photo) }}" class ="photo-profil" width="300px" loading="lazy" />
+            {% else %}
+                <img src="{{ asset('assets/img/avatar.jpg') }}" class ="photo-profil" width="300px" loading="lazy" />
+        {% endif %}
 
         <ul class="list-group">
         <li class="list-group-item">Prénom : {{ app.user.prenom }}</li>

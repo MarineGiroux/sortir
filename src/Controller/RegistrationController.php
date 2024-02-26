@@ -22,26 +22,20 @@ class RegistrationController extends AbstractController
 {
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request,
-                             UserPasswordHasherInterface $userPasswordHasher,
-                             UserAuthenticatorInterface $userAuthenticator,
-                             AppAuthenticator $authenticator,
-                             EntityManagerInterface $entityManager,
-                             SluggerInterface $slugger): Response
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        AppAuthenticator $authenticator,
+        EntityManagerInterface $entityManager,
+        SluggerInterface $slugger
+    ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            if ($form->get('photo_file')->getData() instanceof UploadedFile) {
-                $avatarFile = $form->get('photo_file')->getData();
-                $fileName = $slugger->slug($user->getId()) . '-' . uniqid() . '.' . $avatarFile->guessExtension();
-                $avatarFile->move($this->getParameter('photo_dir'), $fileName);
-                $user->setPhoto($fileName);
-            }
-
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -50,11 +44,21 @@ class RegistrationController extends AbstractController
                 )
             );
 
-//        sauvegarder par default le rôles user en base de données lors de l’inscription
+            // sauvegarder par défaut le rôle "ROLE_USER" en base de données lors de l’inscription
             $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
 
+            // maintenant que l'utilisateur a un ID, on peut générer le slug
+            if ($form->get('photo_file')->getData() instanceof UploadedFile) {
+                $avatarFile = $form->get('photo_file')->getData();
+                $fileName = $slugger->slug($user->getId()) . '-' . uniqid() . '.' . $avatarFile->guessExtension();
+                $avatarFile->move($this->getParameter('photo_dir'), $fileName);
+                $user->setPhoto($fileName);
+            }
+
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             return $userAuthenticator->authenticateUser(
                 $user,
