@@ -47,17 +47,20 @@
                 <td>{{ sortie.nomSortie }}</td>
                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : '' }}</td>
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
-                <td>{{ sortie.nbInscriptionMax }}</td>
+                <td>{{ sortie.users|length }}/{{ sortie.nbInscriptionMax }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
-                {% if is_granted('IS_AUTHENTICATED') %}
-                <td>
-                    {% if sortie.organisateur.id == app.user.id %}
-                        X
-                    {% else %}
 
-                    {% endif %}
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <td>
+                        {% set inscrit = false %}
+                        {% for user in sortie.users %}
+                            {% if app.user.email == user.email %}
+                                X
+                                {% set inscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                 {% endif %}
-                </td>
 
                 <td>{{ sortie.organisateur.nom }}</td>
                 <td>
@@ -93,7 +96,7 @@
     </table>
 
     {% if is_granted('IS_AUTHENTICATED') %}
-    <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
+        <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
     {% endif %}
 
 {% endblock %}
