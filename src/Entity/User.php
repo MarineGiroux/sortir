@@ -59,13 +59,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $sortie;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private ?bool $isVerified = false;
 
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur')]
     private Collection $organisateur;
 
     #[ORM\Column(length: 50)]
     private ?string $pseudo = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isActif = true;
 
     public function __construct()
     {
@@ -239,6 +242,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function isActif(): ?bool
+    {
+        return $this->isActif;
+    }
+
+    public function setIsActif(bool $isActif): static
+    {
+        $this->$isActif = $isActif;
+
+        return $this;
+    }
+
+
+
     /**
      * @return Collection<int, Sortie>
      */
@@ -280,4 +297,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
 }
