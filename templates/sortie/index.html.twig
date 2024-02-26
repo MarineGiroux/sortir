@@ -29,16 +29,16 @@
 
     <table class="table">
         <thead>
-        <tr>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Cloture</th>
-            <th>Nombre maxi d'inscriptions</th>
-            <th>Etat</th>
-            <th>Inscrit ou pas?</th>
-            <th>Organisateur</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Cloture</th>
+                <th>Nombre maxi d'inscriptions</th>
+                <th>Etat</th>
+                <th>Inscrit ou pas?</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
         </thead>
 
         <tbody>
@@ -49,26 +49,36 @@
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
                 <td>{{ sortie.nbInscriptionMax }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
-
+                {% if is_granted('IS_AUTHENTICATED') %}
                 <td>
-                    {% if app.user.id is defined %}
                     {% if sortie.organisateur.id == app.user.id %}
-                <td> X </td>
-                {% else %}
-                    <td>  </td>
-                {% endif %}
-                {% else %}
-                    <td>  </td>
+                        X
+                    {% else %}
+
+                    {% endif %}
                 {% endif %}
                 </td>
 
                 <td>{{ sortie.organisateur.nom }}</td>
                 <td>
-                    <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}">Modifier</a>
-                    {% if sortie.etat.libelle != 'Annulée'  %}
-                        <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}">Annuler</a>
+                    <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                        {% if sortie.organisateur.id == app.user.id %}
+                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
+                        {% endif %}
                     {% endif %}
-                    <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}">Afficher</a>
+
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                        {% if sortie.organisateur.id != app.user.id %}
+                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">S'inscrire</a>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if sortie.organisateur.id == app.user.id %}
+                        {% if sortie.etat.libelle != 'Annulée'  %}
+                            <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                        {% endif %}
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -80,8 +90,8 @@
 
     </table>
 
-
+    {% if is_granted('IS_AUTHENTICATED') %}
     <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
-
+    {% endif %}
 
 {% endblock %}

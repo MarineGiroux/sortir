@@ -46,25 +46,14 @@ class SortieType extends AbstractType
             ->add('motif', TextareaType::class,[
                 'label' => 'Motif :',
                 'required' => false,
-            ])
-
-            ->add('site', EntityType::class, [
-                'label' => 'Ville Organisatrice :',
-                'class' => Site::class,
-                'choice_label' => 'nomSite',
-                'required' => false,
-                'query_builder' =>function (SiteRepository $siteRepository) {
-                    return $siteRepository ->createQueryBuilder('s');
-                }
-            ])
-
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'site' => null,
         ]);
     }
 }
