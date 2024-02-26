@@ -22,6 +22,8 @@ class SortieSearchType extends AbstractType
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nomSite',
+                'label'=>"Choisir votre site :",
+
             ])
             ->add('nomSortieContient', SearchType::class,[
                 'mapped'=>false,
