@@ -27,14 +27,11 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @return Sortie[] Returns an array of Sortie objects
      */
-    public function filterSorties($idUser, $idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur): array
+    public function filterSorties($user, $idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $estInscrit): array
     {
 
-        // Example - $qb->leftJoin('u.Phonenumbers', 'p', 'WITH', 'p.area_code = 55', 'p.id')
-        //public function leftJoin($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
-
         $qb = $this->createQueryBuilder('sortie')
-                ->leftJoin('sortie.users', 'users')
+                ->join('sortie.users', 'users')
                 ->where('sortie.site = :idSite')
                 ->setParameter('idSite', $idSite)
         ;
@@ -55,10 +52,21 @@ class SortieRepository extends ServiceEntityRepository
 //        $estPassee =$form->get('passeesOuPas')->getData();
 
         if($estOrganisateur){
-            $qb->andWhere('sortie.organisateur = :idUser')
-                ->setParameter('idUser', $idUser);
+            $qb->andWhere('sortie.organisateur = :user')
+                ->setParameter('user', $user);
         }
 
+        if($estInscrit){
+            $qb-> andWhere('users = :user')
+                ->setParameter('user', $user);
+        }
+
+
+//        dd($qb
+//            ->orderBy('sortie.dateHeureDebut', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult());
 
         return $qb
             ->orderBy('sortie.dateHeureDebut', 'ASC')

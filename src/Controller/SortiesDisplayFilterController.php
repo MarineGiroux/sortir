@@ -46,7 +46,7 @@ class SortiesDisplayFilterController extends AbstractController
             $estPassee =$form->get('passeesOuPas')->getData();
 
             return $this->render('sortie/index.html.twig', [
-                'sortie' => $sortieRepository->filterSorties($idUser,$idSite,$nomContient,$dateDebut,$dateFin,$estOrganisateur),
+                'sortie' => $sortieRepository->filterSorties($user,$idSite,$nomContient,$dateDebut,$dateFin,$estOrganisateur, $estInscrit),
                 'form' => $form,
             ]);
         }
