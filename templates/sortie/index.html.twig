@@ -65,16 +65,15 @@
                 <td>{{ sortie.organisateur.nom }}</td>
                 <td>
                     <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
-                    {% if is_granted('IS_AUTHENTICATED') %}
+
+                    {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email %}
                         {% if sortie.organisateur.id == app.user.id %}
                             <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
                         {% endif %}
                     {% endif %}
 
-                    {% if is_granted('IS_AUTHENTICATED') %}
-                        {% if inscrit == false %}
-                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">S'inscrire</a>
-                        {% endif %}
+                    {% if sortie.etat.libelle == 'Ouverte' and inscrit == false and is_granted('IS_AUTHENTICATED')%}
+                        <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
                     {% endif %}
 
                     {% if is_granted('IS_AUTHENTICATED') %}
