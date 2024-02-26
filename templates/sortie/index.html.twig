@@ -74,9 +74,11 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if sortie.organisateur.id == app.user.id %}
-                        {% if sortie.etat.libelle != 'Annulée'  %}
-                            <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                        {% if sortie.organisateur.id == app.user.id %}
+                            {% if sortie.etat.libelle != 'Annulée'  %}
+                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </td>
