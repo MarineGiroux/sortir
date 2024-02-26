@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Sortie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,32 +12,34 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class InscriptionController extends AbstractController
 {
-    #[Route('/inscription', name: 'app_inscription', methods: ['GET'], requirements: ['idSortie' => '\d+', 'etatSortie'=> '/^.{1,50}$/'])]
-    public function inscription(Request $request,
-                                EntityManagerInterface $em,
-                                #[MapQueryParameter] int $idSortie,
-                                #[MapQueryParameter] string $etatSortie,
-
-
-    ): Response
+    #[Route('/inscription/{id}', name: 'app_inscription', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function inscription(Sortie $sortie, Request $request, EntityManagerInterface $em): Response
     {
-        //recuperer user et son id
-        $idUser= $this->getUser()->getId();
-        //recupérer sortie :
-        // id,
-        //$idSortie
-        // etat,
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
 
-        // liste participants
-        //verifier si déjà inscrit
-        //vérifier si date déjà passée => si l'état de la sortie est compatible
-        if($idSortie != 'Ouverte'){
+        // Liste des participants
+        $participants = $sortie->getUsers()->toArray();
 
+        // Vérifier les conditions d'inscription
+        if (
+            $sortie->getEtat()->getLibelle() == 'Ouverte'
+            && count($participants) < $sortie->getNbInscriptionMax()
+            && !in_array($user, $participants, true)
+        ) {
+            $sortie->addUser($user);
+            $em->persist($sortie);
+            $em->flush();
+
+            return $this->redirectToRoute('app_home', [
+                'userInscrit' => $user,
+            ]);
         }
-        //vérifier si nombre d'inscrits pas dépassé
 
+        // Rediriger vers la page d'accueil
         return $this->redirectToRoute('app_home');
     }
+
 
     #[Route('/desistement', name: 'desistement')]
     public function desistement(): Response

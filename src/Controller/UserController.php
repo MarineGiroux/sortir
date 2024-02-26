@@ -5,6 +5,7 @@ namespace App\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -13,6 +14,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Entity\User;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class UserController extends AbstractController
 {
@@ -24,7 +26,7 @@ class UserController extends AbstractController
 
     #[Route ('/user/profile/update', name: 'app_user_profile_update')]
     
-    public function updateProfile(Request $request, EntityManagerInterface $entityManager): Response
+    public function updateProfile(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
         $user = $this->getUser();
@@ -44,6 +46,12 @@ class UserController extends AbstractController
 
             $request->request->get('submitAction')=='enregistrer';
 
+            if ($form->get('photo_file')->getData() instanceof UploadedFile) {
+                $avatarFile = $form->get('photo_file')->getData();
+                $fileName = $slugger->slug($user->getId()) . '-' . uniqid() . '.' . $avatarFile->guessExtension();
+                $avatarFile->move($this->getParameter('photo_dir'), $fileName);
+                $user->setPhoto($fileName);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -53,7 +61,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/updateProfile.html.twig', [
-            'form' => $form
+            'form' => $form,
         ]);
     }
 

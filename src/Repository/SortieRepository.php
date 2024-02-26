@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\CountWalker;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -28,9 +30,14 @@ class SortieRepository extends ServiceEntityRepository
     public function filterSorties($idUser, $idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur): array
     {
 
+        // Example - $qb->leftJoin('u.Phonenumbers', 'p', 'WITH', 'p.area_code = 55', 'p.id')
+        //public function leftJoin($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
         $qb = $this->createQueryBuilder('sortie')
+                ->leftJoin('sortie.users', 'users')
                 ->where('sortie.site = :idSite')
-                ->setParameter('idSite', $idSite);
+                ->setParameter('idSite', $idSite)
+        ;
 
         if($nomContient){
             $qb->andWhere("sortie.nomSortie LIKE :nomContient")
@@ -52,14 +59,24 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('idUser', $idUser);
         }
 
-
-
         return $qb
             ->orderBy('sortie.dateHeureDebut', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function getAllSortiesWithUsers() {
+
+        $qb = $this->createQueryBuilder('sorties')
+            ->addSelect('users')
+            ->leftJoin('sorties.users', 'users')
+        ;
+
+        return $qb
+            ->getQuery()
+            ->getResult();
     }
 
 //    public function findOneBySomeField($value): ?Sortie

@@ -19,8 +19,12 @@ class SortiesDisplayFilterController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
-        $sortie = new Sortie();
 
+        $sorties = $sortieRepository->getAllSortiesWithUsers();
+
+
+
+        $sortie = new Sortie();
         $user = $this->getUser();
         if ($user){
             $idUser= $this->getUser()->getId();
@@ -48,7 +52,7 @@ class SortiesDisplayFilterController extends AbstractController
         }
 
         return $this->render('sortie/index.html.twig', [
-            'sortie' => $sortieRepository->findAll(),
+            'sortie' => $sortieRepository->getAllSortiesWithUsers(),
             'form' => $form,
         ]);
     }
