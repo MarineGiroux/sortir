@@ -9,12 +9,9 @@
 
     <div>
         <h3>Date du jour : {{ "now"|date("d/m/Y") }}</h3>
-        <h3>Participant : {% if app.user.nom is defined %}
-                {{ app.user.nom }}
-            {% else %}
-                Non connecté
-            {% endif %}
-        </h3>
+        {% if is_granted('IS_AUTHENTICATED') %}
+            <h3>Participant : {{ app.user.pseudo }} </h3>
+        {% endif %}
     </div>
 
     {% if app.user.id is defined %}
@@ -35,7 +32,9 @@
             <th>Cloture</th>
             <th>Nombre maxi d'inscriptions</th>
             <th>Etat</th>
-            <th>Inscrit ou pas?</th>
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <th>Inscrit ou pas?</th>
+            {% endif %}
             <th>Organisateur</th>
             <th>Actions</th>
         </tr>
@@ -49,26 +48,34 @@
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
                 <td>{{ sortie.nbInscriptionMax }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
-
+                {% if is_granted('IS_AUTHENTICATED') %}
                 <td>
-                    {% if app.user.id is defined %}
                     {% if sortie.organisateur.id == app.user.id %}
-                <td> X </td>
-                {% else %}
-                    <td>  </td>
-                {% endif %}
-                {% else %}
-                    <td>  </td>
+                        X
+                    {% else %}
+
+                    {% endif %}
                 {% endif %}
                 </td>
 
                 <td>{{ sortie.organisateur.nom }}</td>
                 <td>
-                    <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}">Modifier</a>
-                    {% if sortie.etat.libelle != 'Annulée'  %}
-                        <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}">Annuler</a>
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                    {% if sortie.organisateur.id == app.user.id %}
+                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-success">Modifier</a>
                     {% endif %}
-                    <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}">Afficher</a>
+                    {% if sortie.organisateur.id == app.user.id %}
+                        {% if sortie.etat.libelle != 'Annulée'  %}
+                            <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                        {% endif %}
+                    {% endif %}
+                    {% endif %}
+                        <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">Afficher</a>
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                    {% if sortie.organisateur.id != app.user.id %}
+                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-success">S'inscrire</a>
+                    {% endif %}
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -80,8 +87,8 @@
 
     </table>
 
-
+    {% if is_granted('IS_AUTHENTICATED') %}
     <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
-
+    {% endif %}
 
 {% endblock %}

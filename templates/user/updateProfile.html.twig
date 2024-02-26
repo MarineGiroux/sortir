@@ -7,7 +7,7 @@
 
 {% block body %}
 
-    <div class="center">
+    <div class="container">
         <h1>Modifier mon profil</h1>
         <h3>{{ app.user.pseudo }}</h3>
 
@@ -25,10 +25,10 @@
         }) }}
 
 
-        <a href=""></a>  <button type="submit" name="submitAction" value="enregistrer" class="btn">Enregistrer</button>
-        {#        <a href="{{ path('app_user_profile_update')}}" class="btn btn-outline-danger">Enregistrer</a>#}
+        <button type="submit" name="submitAction" value="enregistrer" class="btn btn-outline-secondary">Enregistrer</button>
+        <a href="{{ path('app_home') }}">  <button name="submitAction" value="retour"  type="button" class="btn btn-outline-danger">Retour</button> </a>
         {{ form_end(form) }}
-        <a href="{{ path('app_home') }}">  <button  type="reset" class="btn btn-outline-secondary">Retour</button> </a>
+
 
     </div>
 

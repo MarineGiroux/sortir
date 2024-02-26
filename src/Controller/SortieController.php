@@ -10,6 +10,9 @@ use App\Form\SortieType;
 use App\Form\VilleType;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
+use App\Repository\SiteRepository;
+use App\Repository\SortieRepository;
+use App\Repository\UserRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,36 +38,45 @@ class SortieController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager, EntityManagerInterface $entityManager1, EntityManagerInterface $entityManager2,EtatRepository $etatRepository, Security $security): Response
     {
         $sortie = new Sortie();
-        $form = $this->createForm(SortieType::class, $sortie);
+        $site = $this->getUser()->getSite();
+        $sortie->setSite($site);
+
+        $form = $this->createForm(SortieType::class, $sortie, ['site' => $site]);
+        $form->remove('site');
         $form->remove('motif');
         $form->handleRequest($request);
 
         $userRepository = $security->getUser();
         $sortie->setOrganisateur($userRepository);
 
-        $sortie1 = new Lieu();
-        $form1 = $this->createForm(LieuType::class, $sortie1);
+
+        $lieu = new Lieu();
+        $form1 = $this->createForm(LieuType::class, $lieu);
         $form1->handleRequest($request);
 
-        $sortie2 = new Ville();
-        $form2 = $this->createForm(VilleType::class, $sortie2);
+        $ville = new Ville();
+        $form2 = $this->createForm(VilleType::class, $ville);
         $form2->handleRequest($request);
+
+
+
 
             if ($form->isSubmitted() && $form->isValid()
                 && $form1->isSubmitted() && $form1->isValid()
                 && $form2->isSubmitted() && $form2->isValid()
             ) {
+
                 if( $request->request->get('submitAction') == 'creer'){
                     $sortie->setEtat($etatRepository->find(1));
                 } else if ($request->request->get('submitAction') == 'ouvrir'){
                     $sortie->setEtat($etatRepository->find(2));
                 }
-                $sortie->setLieu($sortie1);
-                $sortie1->setVille($sortie2);
 
+                $sortie->setLieu($lieu);
+                $lieu->setVille($ville);
                 $entityManager->persist($sortie);
-                $entityManager1->persist($sortie1);
-                $entityManager2->persist($sortie2);
+                $entityManager1->persist($lieu);
+                $entityManager2->persist($ville);
                 $entityManager->flush();
                 $entityManager1->flush();
                 $entityManager2->flush();
@@ -73,13 +85,15 @@ class SortieController extends AbstractController
             }
 
         return $this->render('sortie/create.html.twig', [
-            'sortieform' => $form ,'lieuform' => $form1, 'villeform' => $form2
+            'sortieform' => $form ,'lieuform' => $form1, 'villeform' => $form2,
         ]);
     }
 
     #[Route('/update/{id}', name: '_update', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function update(Request $request, EntityManagerInterface $entityManager, EntityManagerInterface $entityManager1, EntityManagerInterface $entityManager2 ,Sortie $sortie, LieuRepository $lieuRepository,VilleRepository $villeRepository , EtatRepository $etatRepository, Security $security): Response
     {
+        $site = $this->getUser()->getSite();
+        $sortie->setSite($site);
         $form = $this->createForm(SortieType::class, $sortie);
         $form->remove('motif');
         $form->remove('site');
