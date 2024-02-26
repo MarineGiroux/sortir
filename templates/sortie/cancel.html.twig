@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% form_theme sortieform 'bootstrap_5_layout.html.twig' %}
 
 {% block title %}Annuler une sortie{% endblock %}
 
@@ -25,10 +26,6 @@
         <tr>
             <th>Lieu :</th>
             <td>{{ sortie.lieu.nomLieu }} {{ sortie.lieu.rue }} {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nomVille }}</td>
-        </tr>
-        <tr>
-            <th>Motif :</th>
-            <td>{{ sortie.motif }}</td>
         </tr>
         </tbody>
     </table>

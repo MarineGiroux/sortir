@@ -14,7 +14,7 @@ class HomeController extends AbstractController
     {
         $sortie = $sortieRepository->findAll();
 
-        return $this->render('sortie/list.html.twig', [
+        return $this->render('sortie/index.html.twig', [
             'sortie'=>$sortie,
         ]);
     }

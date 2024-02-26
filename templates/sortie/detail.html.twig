@@ -15,6 +15,14 @@
                 <td>{{ sortie.nomSortie }}</td>
             </tr>
             <tr>
+                <th>Ville organisatrice :</th>
+                <td>{{ sortie.site.nomSite }}</td>
+            </tr>
+            <tr>
+                <th>Organisateur :</th>
+                <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</td>
+            </tr>
+            <tr>
                 <th>Date et heure de la sortie :</th>
                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : '' }}</td>
             </tr>
@@ -35,10 +43,6 @@
                 <td>{{ sortie.infosSortie }}</td>
             </tr>
             <tr>
-                <th>Ville organisatrice :</th>
-                <td>{{ sortie.site.nomSite }}</td>
-            </tr>
-            <tr>
                 <th>Lieu :</th>
                 <td>{{ sortie.lieu.nomLieu }}</td>
             </tr>
@@ -51,6 +55,10 @@
                 <td>{{ sortie.lieu.ville.codePostal }}</td>
             </tr>
             <tr>
+                <th>Ville :</th>
+                <td>{{ sortie.lieu.ville.nomVille }}</td>
+            </tr>
+            <tr>
                 <th>Latitude :</th>
                 <td>{{ sortie.lieu.latitude }}</td>
             </tr>
@@ -58,7 +66,6 @@
                 <th>Longitude :</th>
                 <td>{{ sortie.lieu.longitude }}</td>
             </tr>
-            <p>Ville organisatrice : {{ app.user.site.nomSite }}</p>
 
         </tbody>
     </table>
