@@ -58,21 +58,23 @@
 
                 <td>{{ sortie.organisateur.nom }}</td>
                 <td>
+                    <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
                     {% if is_granted('IS_AUTHENTICATED') %}
-                    {% if sortie.organisateur.id == app.user.id %}
-                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-success">Modifier</a>
+                        {% if sortie.organisateur.id == app.user.id %}
+                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
+                        {% endif %}
                     {% endif %}
+
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                        {% if sortie.organisateur.id != app.user.id %}
+                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">S'inscrire</a>
+                        {% endif %}
+                    {% endif %}
+
                     {% if sortie.organisateur.id == app.user.id %}
                         {% if sortie.etat.libelle != 'Annulée'  %}
                             <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
                         {% endif %}
-                    {% endif %}
-                    {% endif %}
-                        <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-primary">Afficher</a>
-                    {% if is_granted('IS_AUTHENTICATED') %}
-                    {% if sortie.organisateur.id != app.user.id %}
-                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-success">S'inscrire</a>
-                    {% endif %}
                     {% endif %}
                 </td>
             </tr>
