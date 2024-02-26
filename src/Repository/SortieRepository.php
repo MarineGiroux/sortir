@@ -30,11 +30,14 @@ class SortieRepository extends ServiceEntityRepository
     public function filterSorties($idUser, $idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur): array
     {
 
+        // Example - $qb->leftJoin('u.Phonenumbers', 'p', 'WITH', 'p.area_code = 55', 'p.id')
+        //public function leftJoin($join, $alias, $conditionType = null, $condition = null, $indexBy = null);
+
         $qb = $this->createQueryBuilder('sortie')
-                ->addSelect('users')
-                ->leftJoin('sorties.users', 'users')
+                ->leftJoin('sortie.users', 'users')
                 ->where('sortie.site = :idSite')
-                ->setParameter('idSite', $idSite);
+                ->setParameter('idSite', $idSite)
+        ;
 
         if($nomContient){
             $qb->andWhere("sortie.nomSortie LIKE :nomContient")
@@ -56,8 +59,6 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('idUser', $idUser);
         }
 
-
-
         return $qb
             ->orderBy('sortie.dateHeureDebut', 'ASC')
             ->setMaxResults(10)
@@ -68,19 +69,14 @@ class SortieRepository extends ServiceEntityRepository
 
     public function getAllSortiesWithUsers() {
 
-
-
         $qb = $this->createQueryBuilder('sorties')
             ->addSelect('users')
             ->leftJoin('sorties.users', 'users')
-
         ;
-
 
         return $qb
             ->getQuery()
             ->getResult();
-
     }
 
 //    public function findOneBySomeField($value): ?Sortie
