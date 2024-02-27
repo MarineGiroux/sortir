@@ -16,15 +16,16 @@ use App\Entity\User;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+#[Route('/user', name: 'app_user')]
 class UserController extends AbstractController
 {
-    #[Route('/user/profile', name: 'app_user_profile')]
+    #[Route('/profile', name: '_profile')]
     public function afficherProfil(): Response
     {
         return $this->render('user/profil.html.twig');
     }
 
-    #[Route ('/user/profile/update', name: 'app_user_profile_update')]
+    #[Route ('/profile/update', name: '_profile_update')]
     
     public function updateProfile(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
@@ -66,7 +67,7 @@ class UserController extends AbstractController
     }
 
 
-    #[Route('/user/delete/{id}', name:'app_user_delete', requirements: ['id' => '\d+'])]
+    #[Route('/delete/{id}', name:'_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
     public function deleteUser(User $user, EntityManagerInterface $em): Response
     {
@@ -79,7 +80,7 @@ class UserController extends AbstractController
 
     }
 
-    #[Route('user/list', name:'app_user_list')]
+    #[Route('/list', name:'_list')]
     #[IsGranted('ROLE_ADMIN')]
     public function listUsers(UserRepository $userRepository): Response
     {
@@ -87,6 +88,14 @@ class UserController extends AbstractController
 
         return $this->render('user/listUsers.html.twig', [
             'users' => $users
+        ]);
+    }
+
+    #[Route('/profile/show/{id}', name: '_profile_show')]
+    public function showUserProfile(User $user): Response
+    {
+        return $this->render('user/profilInscrit.html.twig', [
+            'user' => $user,
         ]);
     }
 

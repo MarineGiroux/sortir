@@ -21,6 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: "Le mail est obligatoire")]
     #[Assert\Email( message: 'Le format d\'email n\'est pas conforme.' )]
     #[Assert\Regex('/^[a-zA-Z0-9._%+-]+@eni\.fr$/', message: 'Utilisateur non autorisé')]
     private ?string $email = null;
@@ -35,9 +36,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire")]
     private ?string $nom = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Le prenom est obligatoire")]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -49,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-
+    #[Assert\NotBlank(message: "Le site est obligatoire")]
     private ?Site $site = null;
 
     #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'users')]

@@ -76,6 +76,7 @@
         <tr>
             <th>Pseudo :</th>
             <th>Nom</th>
+            <th>Détail</th>
         </tr>
         </thead>
 
@@ -84,6 +85,9 @@
             <tr>
                 <td>{{ userInscrit.pseudo }}</td>
                 <td>{{ userInscrit.nom }}</td>
+{#                <td><a href="{{ path('/user/profil/{id}', {'id': userInscrit.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a></td>#}
+                <td><a href="{{ path('app_user_profile_show', {'id': userInscrit.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a></td>
+
             </tr>
         {% else %}
             <tr>

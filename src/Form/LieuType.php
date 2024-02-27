@@ -20,6 +20,7 @@ class LieuType extends AbstractType
             ])
             ->add('nomLieu', TextType::class,[
                 'label' => 'Lieu :',
+                'label_attr' => ['class' => 'required-label'],
                 'required' => false,
             ])
             ->add('latitude', IntegerType::class,[

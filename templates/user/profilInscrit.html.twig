@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Profil{% endblock %}
+
+{% block body %}
+
+    <h2 class="h2-profil">Détails du Profil de {{ user.pseudo }}</h2>
+
+    <div class="container">
+
+        {% if user.photo is not empty %}
+            <img src="{{ asset(photo_dir ~ '/' ~ user.photo) }}" class ="photo-profil" width="300px" loading="lazy" />
+        {% else %}
+            <img src="{{ asset('assets/img/avatar.jpg') }}" class ="photo-profil" width="300px" loading="lazy" />
+        {% endif %}
+
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Pseudo:</strong> {{ user.pseudo }}</li>
+                <li class="list-group-item"><strong>Nom:</strong> {{ user.nom }}</li>
+                <li class="list-group-item"><strong>Prénom:</strong> {{ user.prenom }}</li>
+                <li class="list-group-item"><strong>Ville de rattachement : </strong>{{ user.site.nomSite }}</li>
+            </ul>
+        <br>
+
+        <a href="{{ path('app_sortie_detail', {'id': user.sortie.first().id}) }}" type="button" class="btn btn-outline-secondary">Retour</a>
+{#        <a href="{{ path('app_home') }}" class="btn btn-outline-primary mt-3">Retour à l'accueil</a>#}
+    </div>
+
+{% endblock %}
