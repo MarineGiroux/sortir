@@ -24,11 +24,11 @@
             </tr>
             <tr>
                 <th>Date et heure de la sortie :</th>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : '' }}</td>
+                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d-m-Y H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>Date limite d'inscription :</th>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
+                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d-m-Y H:i') : '' }}</td>
             </tr>
             <tr>
                 <th>Nombre de places :</th>
@@ -70,38 +70,55 @@
         </tbody>
     </table>
     <br>
-    <h3>Liste des participants</h3>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Pseudo :</th>
-            <th>Nom</th>
-            <th>Détail</th>
-        </tr>
-        </thead>
 
-        <tbody>
-        {% for userInscrit in sortie.users %}
+    {% if sortie.etat.libelle == 'Ouverte'%}
+        <h3>Liste des participants</h3>
+        <br>
+        <table class="table">
+            <thead>
             <tr>
-                <td>{{ userInscrit.pseudo }}</td>
-                <td>{{ userInscrit.nom }}</td>
-{#                <td><a href="{{ path('/user/profil/{id}', {'id': userInscrit.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a></td>#}
-                <td><a href="{{ path('app_user_profile_show', {'id': userInscrit.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a></td>
-
+                <th>Pseudo :</th>
+                <th>Nom</th>
+                {% if is_granted('IS_AUTHENTICATED')%}
+                    <th>Détail</th>
+                {% endif %}
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="2">Aucun participant inscrit</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
 
-
-    {% if sortie.etat.libelle == 'Ouverte' %}
-        <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+            <tbody>
+            {% for userInscrit in sortie.users %}
+                <tr>
+                    <td>{{ userInscrit.pseudo }}</td>
+                    <td>{{ userInscrit.nom }}</td>
+                    {% if is_granted('IS_AUTHENTICATED')%}
+                        <td><a href="{{ path('app_user_profile_show', {'id': userInscrit.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a></td>
+                    {% endif %}
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucun participant inscrit</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
-        <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour page d'accueil</button></a>
+
+
+    {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
+        {% set flag = 0 %}
+        {% for user in sortie.users %}
+            {% if user.email == app.user.email %}
+                {% set flag = 1 %}
+            {% endif %}
+        {% endfor %}
+
+        {% if flag == 0 %}
+            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+        {% else %}
+            <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
+        {% endif %}
+    {% endif %}
+        <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour</button></a>
 
 
 {% endblock %}

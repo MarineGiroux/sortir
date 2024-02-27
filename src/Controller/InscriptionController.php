@@ -41,9 +41,29 @@ class InscriptionController extends AbstractController
     }
 
 
-    #[Route('/desistement', name: 'desistement')]
-    public function desistement(): Response
+    #[Route('/desistement/{id}', name: 'app_desistement', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function desistement(Sortie $sortie, EntityManagerInterface $em): Response
     {
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Liste des participants
+        $participants = $sortie->getUsers()->toArray();
+
+        // Vérifier si l'utilisateur est inscrit
+        if (in_array($user, $participants, true)) {
+            // Retirer l'utilisateur de la liste des participants
+            $sortie->removeUser($user);
+            $em->persist($sortie);
+            $em->flush();
+
+            // Rediriger vers la page d'accueil ou une autre page
+            return $this->redirectToRoute('app_home', [
+                'userDesiste' => $user,
+            ]);
+        }
+
+        // Rediriger vers la page d'accueil si l'utilisateur n'est pas inscrit
         return $this->redirectToRoute('app_home');
     }
 

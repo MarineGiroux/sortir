@@ -35,77 +35,81 @@
             <th>Cloture</th>
             <th>Inscrits/places</th>
             <th>Etat</th>
-            <th>Inscrit</th>
+            {% if is_granted('IS_AUTHENTICATED')%}
+                <th>Inscrit</th>
+            {% endif %}
             <th>Organisateur</th>
             <th>Actions</th>
         </tr>
         </thead>
 
         <tbody>
-        {% for sortie in sortie %}
-            <tr>
-                <td>{{ sortie.nomSortie }}</td>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : '' }}</td>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : '' }}</td>
-                <td>{{ sortie.users|length }}/{{ sortie.nbInscriptionMax }}</td>
-                <td>{{ sortie.etat.libelle }}</td>
+        {% set filteredSorties = sortie|filter(s => s.etat.libelle != 'Archivée') %}
 
-                {% if is_granted('IS_AUTHENTICATED') %}
-                    <td>
-                        {% set flag = 0 %}
-                        {% for user in sortie.users %}
-                            {% if user.email == app.user.email %}
-                                {% set flag = 1 %}
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if flag ==1 %}
-                            x
-                        {% endif %}
-                    </td>
-                {% endif %}
-
-                <td>{{ sortie.organisateur.nom }}</td>
-                <td>
-                    <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
-
-                    {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte']%}
-                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
-                    {% endif %}
-
-                    {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
-                        {% set flag = 0 %}
-                        {% for user in sortie.users %}
-                            {% if user.email == app.user.email %}
-                                {% set flag = 1 %}
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if flag == 0 %}
-                            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-                        {% endif %}
-                    {% endif %}
+        {% if filteredSorties|length > 0 %}
+            {% for sortie in filteredSorties %}
+                <tr>
+                    <td>{{ sortie.nomSortie }}</td>
+                    <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d-m-Y H:i') : '' }}</td>
+                    <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d-m-Y H:i') : '' }}</td>
+                    <td>{{ sortie.users|length }}/{{ sortie.nbInscriptionMax }}</td>
+                    <td>{{ sortie.etat.libelle }}</td>
 
                     {% if is_granted('IS_AUTHENTICATED') %}
-                        {% if sortie.organisateur.id == app.user.id %}
-                            {% if sortie.etat.libelle != 'Annulée'  %}
-                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                        <td>
+                            {% set flag = 0 %}
+                            {% for user in sortie.users %}
+                                {% if user.email == app.user.email %}
+                                    {% set flag = 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if flag ==1 %}
+                                x
+                            {% endif %}
+                        </td>
+                    {% endif %}
+
+                    <td>{{ sortie.organisateur.nom }}</td>
+                    <td>
+                        <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
+
+                        {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte']%}
+                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
+                        {% endif %}
+
+                        {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
+                            {% set flag = 0 %}
+                            {% for user in sortie.users %}
+                                {% if user.email == app.user.email %}
+                                    {% set flag = 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if flag == 0 %}
+                                <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+                            {% else %}
+                                <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
                             {% endif %}
                         {% endif %}
-                    {% endif %}
-                </td>
-            </tr>
+
+                        {% if is_granted('IS_AUTHENTICATED') %}
+                            {% if sortie.etat.libelle in ['Créée', 'Ouverte'] and sortie.organisateur.id == app.user.id %}
+                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger"  onclick="return confirm('Etes-vous sûr ?')">Annuler</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
         {% else %}
             <tr>
                 <td colspan="8">no records found</td>
             </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
-
     </table>
 
     {% if is_granted('IS_AUTHENTICATED') %}
         <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
     {% endif %}
-
 {% endblock %}

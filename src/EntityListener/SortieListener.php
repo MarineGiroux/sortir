@@ -4,39 +4,56 @@ namespace App\EntityListener;
 
 use App\Entity\Sortie;
 use App\Repository\EtatRepository;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SortieListener
 {
-    public function __construct( private readonly EtatRepository $etatRepository, EntityManager $em){
+    private EtatRepository $etatRepository;
+    private EntityManagerInterface $entityManager;
 
+    public function __construct(EtatRepository $etatRepository, EntityManagerInterface $entityManager)
+    {
+        $this->etatRepository = $etatRepository;
+        $this->entityManager = $entityManager;
     }
 
 
     public function postLoad(Sortie $sortie): void
     {
-        $passee = new \DateTime();
-
+        $heureActuelle = new \DateTime();
+        $heureActuelleInt = $heureActuelle->getTimestamp();
         $oneMonthAgo = new \DateTime('-1 month');
+        $heureDeDebut = $sortie->getDateHeureDebut();
+        $heureDeDebutInt = $heureDeDebut->getTimestamp();
+        $heureDeFinInt = $heureDeDebutInt + ($sortie->getDuree() * 60);
+
+
         if ($sortie->getDateHeureDebut() < $oneMonthAgo) {
-            $etatArchivee = $this->etatRepository->findOneBy(['libelle' => 'Archivée']);
+            // Si l'heure actuelle est avant un mois auparavant, la sortie est archivée
+            $etatArchivee = $this->etatRepository->findOneBy(['id' => '3']);
 
             if ($sortie->getEtat() !== $etatArchivee) {
                 $sortie->setEtat($etatArchivee);
-
             }
-        } else if ($sortie->getDateHeureDebut() < $passee){
-            $etatPassee = $this->etatRepository->findOneBy(['libelle' => 'Passée']);
+
+        } else if ($heureActuelleInt >= $heureDeDebutInt && $heureActuelleInt <= $heureDeFinInt) {
+            // Si l'heure actuelle est entre l'heure de début et l'heure de fin, la sortie est en cours
+            $etatEnCours = $this->etatRepository->findOneBy(['id' => '4']);
+
+            if ($sortie->getEtat() !== $etatEnCours) {
+                $sortie->setEtat($etatEnCours);
+            }
+
+        } else if ($sortie->getDateHeureDebut() < $heureActuelle) {
+            // Si l'heure actuelle est après l'heure de fin, la sortie est passée
+            $etatPassee = $this->etatRepository->findOneBy(['id' => '5']);
 
             if ($sortie->getEtat() !== $etatPassee) {
                 $sortie->setEtat($etatPassee);
-
             }
-
         }
+        $this->entityManager->persist($sortie);
+        $this->entityManager->flush();
+
     }
-
-
-
-
 }
