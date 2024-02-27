@@ -33,7 +33,7 @@
     {{ form_start(sortieform) }}
     {{ form_widget(sortieform) }}
 
-    <button type="submit" name="submitAction" value="annuler" class="btn btn-outline-secondary">Annuler la sortie</button>
+    <button type="submit" name="submitAction" value="annuler" class="btn btn-outline-secondary" onclick="return confirm('Etes-vous sûr ?')">Annuler la sortie</button>
     <a href="{{ path('app_home') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Retour</button></a>
 
 

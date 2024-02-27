@@ -95,7 +95,7 @@
 
                         {% if is_granted('IS_AUTHENTICATED') %}
                             {% if sortie.etat.libelle in ['Créée', 'Ouverte'] and sortie.organisateur.id == app.user.id %}
-                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger"  onclick="return confirm('Etes-vous sûr ?')">Annuler</a>
+                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
                             {% endif %}
                         {% endif %}
                     </td>
