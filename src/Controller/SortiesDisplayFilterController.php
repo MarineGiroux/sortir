@@ -19,98 +19,48 @@ class SortiesDisplayFilterController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
-
-        $sorties = $sortieRepository->getAllSortiesWithUsers();
-
-
-
-        $sortie = new Sortie();
         $user = $this->getUser();
-        if ($user){
-            $idUser= $this->getUser()->getId();
+
+        if ($user) {
+            $sorties = $sortieRepository->findAll();
+            $form = $this->createForm(SortieSearchType::class, $sorties,
+                ['nomSiteUser' => $user->getSite()->getNomSite(),
+                ]);
+
+
+        } else {
+            $sorties = $sortieRepository->findAll();
+            $form = $this->createForm(SortieSearchType::class, $sorties,
+                ['nomSiteUser' => 'Utilisateur non connecté',
+                ]);
         }
 
-        $form = $this->createForm(SortieSearchType::class, $sortie);
+            $form->handleRequest($request);
 
-        $form->handleRequest($request);
+            if ($form->isSubmitted()) {
 
-        if ($form->isSubmitted()) {
+                $siteParDefautOuPas = $form->get('siteParDefautOuPas')->getData();
+                $site = $form->get('site')->getData();
+                $nomContient = $form->get('nomSortieContient')->getData();
+                $dateDebut = $form->get('dateDebutSorties')->getData();
+                $dateFin = $form->get('dateFinSorties')->getData();
+                $estOrganisateur = $form->get('organisateurOuPas')->getData();
+                $inscrit = $form->get('inscrit')->getData();
+                $nonInscrit = $form->get('nonInscrit')->getData();
+                $estPassee = $form->get('passeesOuPas')->getData();
 
-            $idSite = $form->get('site')->getData()->getId();
-            $nomContient = $form->get('nomSortieContient')->getData();
-            $dateDebut = $form->get('dateDebutSorties')->getData();
-            $dateFin = $form->get('dateFinSorties')->getData();
-            $estOrganisateur =$form->get('organisateurOuPas')->getData();
-            $estInscrit =$form->get('inscritOuPas')->getData();
-            $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
-            $estPassee =$form->get('passeesOuPas')->getData();
+
+                    return $this->render('sortie/index.html.twig', [
+                        'sortie' => $sortieRepository->filterSorties($user, $siteParDefautOuPas, $site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscrit,$nonInscrit,$estPassee),
+                        'form' => $form,
+                    ]);
+            }
 
             return $this->render('sortie/index.html.twig', [
-                'sortie' => $sortieRepository->filterSorties($user,$idSite,$nomContient,$dateDebut,$dateFin,$estOrganisateur, $estInscrit),
+                'sortie' => $sortieRepository->getAllSortiesWithUsers($user),
                 'form' => $form,
             ]);
         }
 
-        return $this->render('sortie/index.html.twig', [
-            'sortie' => $sortieRepository->getAllSortiesWithUsers(),
-            'form' => $form,
-        ]);
+
     }
-
-    #[Route('/new', name: 'app_sorties_display_filter_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $sortie = new Sortie();
-        $form = $this->createForm(SortieType::class, $sortie);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($sortie);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_sorties_display_filter_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('sorties_display_filter/new.html.twig', [
-            'sortie' => $sortie,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_sorties_display_filter_show', methods: ['GET'])]
-    public function show(Sortie $sortie): Response
-    {
-        return $this->render('sorties_display_filter/show.html.twig', [
-            'sortie' => $sortie,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_sorties_display_filter_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(SortieType::class, $sortie);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_sorties_display_filter_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('sorties_display_filter/edit.html.twig', [
-            'sortie' => $sortie,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_sorties_display_filter_delete', methods: ['POST'])]
-    public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($sortie);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_sorties_display_filter_index', [], Response::HTTP_SEE_OTHER);
-    }
-}

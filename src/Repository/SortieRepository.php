@@ -27,39 +27,58 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @return Sortie[] Returns an array of Sortie objects
      */
-    public function filterSorties($user, $idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $estInscrit): array
+    public function filterSorties($user, $siteParDefautOuPas,$site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscrit,$nonInscrit,$estPassee):array
     {
+        $qb = $this->createQueryBuilder('sorties')
+            ->leftJoin('sorties.users', 'users');
 
-        $qb = $this->createQueryBuilder('sortie')
-                ->join('sortie.users', 'users')
-                ->where('sortie.site = :idSite')
-                ->setParameter('idSite', $idSite)
-        ;
-
-        if($nomContient){
-            $qb->andWhere("sortie.nomSortie LIKE :nomContient")
-                ->setParameter('nomContient', '%'.$nomContient.'%');
-        }
-
-        if($dateDebut && $dateFin){
-            $qb->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
-                    ->setParameter('dateDebut', $dateDebut)
-                    ->setParameter('dateFin', $dateFin);
+        if ($user) {
+            if ($siteParDefautOuPas == 'conserverSite') {
+                $qb->andWhere('sorties.site = :site')
+                    ->setParameter('site', $user->getSite());
+            } elseif ($siteParDefautOuPas == 'choisirSite') {
+                $qb->andWhere('sorties.site = :site')
+                    ->setParameter('site', $site);
             }
-//        $estOrganisateur =$form->get('organisateurOuPas')->getData();
-//        $estInscrit =$form->get('inscritOuPas')->getData();
-//        $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
-//        $estPassee =$form->get('passeesOuPas')->getData();
+        }
 
-        if($estOrganisateur){
-            $qb->andWhere('sortie.organisateur = :user')
+        if ($nomContient) {
+            $qb->andWhere("sorties.nomSortie LIKE :nomContient")
+                ->setParameter('nomContient', '%' . $nomContient . '%');
+        }
+
+        if($dateDebut){
+            $qb->andWhere('sorties.dateHeureDebut >= :dateDebut')
+                ->setParameter('dateDebut', $dateDebut);
+        }
+
+        if($dateFin){
+            $qb->andWhere('sorties.dateHeureDebut <= :dateFin')
+                ->setParameter('dateFin', $dateFin);
+        }
+
+        if ($estOrganisateur) {
+            $qb->andWhere('sorties.organisateur = :user')
                 ->setParameter('user', $user);
         }
 
-        if($estInscrit){
-            $qb-> andWhere('users = :user')
+        if ($inscrit) {
+            $qb->andWhere('users = :user')
                 ->setParameter('user', $user);
         }
+
+        if ($nonInscrit) {
+            $qb->andWhere('users != :user')
+                ->setParameter('user', $user);
+        }
+
+        if ($estPassee) {
+            $qb->andWhere("sorties.etat ='Passée'" );
+        }
+
+
+
+
 
 
 //        dd($qb
@@ -69,20 +88,31 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getResult());
 
         return $qb
-            ->orderBy('sortie.dateHeureDebut', 'ASC')
+            ->orderBy('sorties.dateHeureDebut', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
-    public function getAllSortiesWithUsers() {
+
+    public function getAllSortiesWithUsers($user):array {
+//        dd($user->getSite());
+
+        if (!$user){
+            $qb = $this->createQueryBuilder('sorties')
+                ->addSelect('users')
+                ->leftJoin('sorties.users', 'users');
+            return $qb
+                ->getQuery()
+                ->getResult();
+        }
 
         $qb = $this->createQueryBuilder('sorties')
             ->addSelect('users')
             ->leftJoin('sorties.users', 'users')
+            ->andWhere('sorties.site = :site')
+            ->setParameter('site', $user->getSite())
         ;
-
         return $qb
             ->getQuery()
             ->getResult();
