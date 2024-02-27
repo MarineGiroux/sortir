@@ -36,14 +36,6 @@ class SortieListener
         }
     }
 
-//    public function postLoadEnCours(Sortie $sortie):void
-//    {
-//        $etat = $this->etatRepository->findOneBy(['libelle' => 'Activité en cours']);
-//
-//        if($sortie->getDateHeureDebut() < new \DateTime()){
-//            $sortie->setEtat($etat);
-//        }
-//    }
 
 
 
