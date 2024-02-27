@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Site;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +17,12 @@ class SiteType extends AbstractType
             ->add('nomSite', TextType::class,[
                 'label' => 'Ville Organisatrice :',
                 'required' => false,
+            ])
+
+            ->add('nomSiteContient', SearchType::class,[
+                'mapped'=>false,
+                'required'=>false,
+                'label'=>"Le nom du site contient:",
             ])
         ;
     }
