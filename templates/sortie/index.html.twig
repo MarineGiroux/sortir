@@ -6,16 +6,17 @@
 {% block body %}
 
     <h1>Filtrer les sorties</h1>
-
+    <br>
     <div>
         <h3>Date du jour : {{ "now"|date("d/m/Y") }}</h3>
-        <h3>Participant : {% if app.user.nom is defined %}
-                {{ app.user.nom }}
+        <br>
+        {% if app.user.nom is defined %}
+            <h3>Participant :{{ app.user.pseudo }}</h3>
             {% else %}
-                Non connecté
-            {% endif %}
-        </h3>
+                <h3>Non connecté</h3>
+        {% endif %}
     </div>
+    <br>
 
     {% if app.user.id is defined %}
 

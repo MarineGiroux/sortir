@@ -21,11 +21,11 @@ class SortieListener
     public function postLoad(Sortie $sortie): void
     {
         $heureActuelle = new \DateTime();
-        $heureActuelleInt = $heureActuelle->getTimestamp();
+        $heureActuelleInt = ($heureActuelle->getTimestamp())-3600;
         $oneMonthAgo = new \DateTime('-1 month');
         $heureDeDebut = $sortie->getDateHeureDebut();
-        $heureDeDebutInt = $heureDeDebut->getTimestamp();
-        $heureDeFinInt = $heureDeDebutInt + ($sortie->getDuree() * 60);
+        $heureDeDebutInt = ($heureDeDebut->getTimestamp()-3600);
+        $heureDeFinInt = ($heureDeDebutInt + ($sortie->getDuree() * 60))-3600;
 
 
         if ($sortie->getDateHeureDebut() < $oneMonthAgo) {
