@@ -21,20 +21,19 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
-//    /**
-//     * @return Site[] Returns an array of Site objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Site[] Returns an array of Site objects
+     */
+    public function filtreSiteByNom(string $nomContient): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.nomSite  LIKE :nomContent')
+            ->setParameter('nomContent', '%' . $nomContient . '%')
+            ->orderBy('s.id', 'ASC');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Site
 //    {

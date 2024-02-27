@@ -1,0 +1,66 @@
+{% extends 'baseAdmin.html.twig' %}
+
+
+
+{% block title %}Sortir.com {% endblock %}
+
+{% block body %}
+
+{#   navbar vertical#}
+{#   <div class="container-fluid">#}
+{#   <div class="row">#}
+{#   <nav class="col-md-2 d-none d-md-block bg-light sidebar navbar-vertical">#}
+{#      <div class="sidebar-sticky">#}
+{#         <h4>Dashboard</h4>#}
+{#         <ul class="nav flex-column">#}
+
+{#            <li class="nav-item"><a class="nav-link active" href="{{ path('app_dashboard_users') }}"> Afficher Utilisateur</a></li>#}
+{#            <li class="nav-item">#}
+{#               <a class="nav-link" href="{{ path('app_dashboard-sortie') }}"> Afficher sorties</a></li>#}
+{#            <li class="nav-item">#}
+{#               <a class="nav-link" href=""> Rendre innactif Utilisateur</a></li>#}
+{#            <li class="nav-item">#}
+{#               <a class="nav-link" href=""> Gérer les villes</a></li>#}
+{#            <li class="nav-item">#}
+{#               <a class="nav-link" href=""> Gérer les sites</a></li>#}
+{#         </ul>#}
+{#      </div>#}
+{#   </nav>#}
+
+{#   <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">#}
+
+
+   <h3>List Users</h3>
+
+   <table>
+      <tr>
+         <th>Pseudo</th>
+         <th>Email</th>
+         <th>Action</th>
+      </tr>
+
+      {% for user in users %}
+      <tr>
+
+         <td>{{ user.pseudo }}</td>
+         <td>{{ user.email }}</td>
+         <td>
+             <a href="{{ path('app_user_delete', {'id' : user.id}) }}"> <button  type="button" class="btn btn-outline-secondary">Supprimer Utilisateur</button></a>
+
+         </td>
+
+      </tr>
+      {% endfor %}
+   </table>
+
+{#suite navbar verticale#}
+{#   </main>#}
+{#   </div>#}
+{#   </div>#}
+
+{#   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>#}
+
+
+
+
+{% endblock %}

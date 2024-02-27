@@ -1,0 +1,26 @@
+{% extends 'baseAdmin.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block body %}
+
+<div class="container">
+    <h3>Modifier site</h3>
+
+    {{ form_errors(form) }}
+    {{ form_start(form) }}
+
+    {{ form_row(form.nomSite) }}
+
+    <button type="submit" value="Modifier">Modifier</button>
+
+
+    <button type="submit" name="submitAction" value="Modifier" class="btn btn-outline-secondary"></button>
+    <a href="{{ path('app_sites') }}">  <button name="submitAction" value="retour"  type="button" class="btn btn-outline-danger">Retour</button> </a>
+    {{ form_end(form) }}
+</div>
+
+
+{% endblock %}
+ {% block title %}{{ parent() }} | Dashboard{% endblock %}
+
+
