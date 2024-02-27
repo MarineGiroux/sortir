@@ -9,14 +9,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
+    #[Route('/', name: 'app')]
     public function index(SortieRepository $sortieRepository): Response
     {
-        $sortie = $sortieRepository->findAll();
-
-        return $this->render('sortie/index.html.twig', [
-            'sortie'=>$sortie,
-        ]);
+        return $this->redirectToRoute('app_home');
     }
 
 

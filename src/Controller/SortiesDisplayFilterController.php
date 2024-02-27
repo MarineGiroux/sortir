@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sorties/filers/')]
+#[Route('/sorties/filers')]
 class SortiesDisplayFilterController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
@@ -80,7 +80,6 @@ class SortiesDisplayFilterController extends AbstractController
     #[Route('/show/{id}', name: 'app_sorties_display_filter_show', methods: ['GET'])]
     public function show(Sortie $sortie): Response
     {
-        dd($sortie);
         return $this->render('sorties_display_filter/show.html.twig', [
             'sortie' => $sortie,
         ]);
