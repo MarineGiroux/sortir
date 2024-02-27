@@ -27,7 +27,7 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @return Sortie[] Returns an array of Sortie objects
      */
-    public function filterSorties($user, $siteParDefautOuPas,$site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscrit,$nonInscrit,$estPassee):array
+    public function filterSorties($user, $siteParDefautOuPas,$site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscritOuPas,$estPassee):array
     {
         $qb = $this->createQueryBuilder('sorties')
             ->leftJoin('sorties.users', 'users');
@@ -62,14 +62,33 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
         }
 
-        if ($inscrit) {
-            $qb->andWhere('users = :user')
-                ->setParameter('user', $user);
-        }
+//        if ($inscrit) {
+//            $qb->andWhere('users = :user')
+//                ->setParameter('user', $user);
+//        }
+//
+//        if ($nonInscrit) {
+//            $qb->andWhere('users != :user')
+//                ->setParameter('user', $user);
+//        }
 
-        if ($nonInscrit) {
-            $qb->andWhere('users != :user')
-                ->setParameter('user', $user);
+        if($inscritOuPas){
+            if($inscritOuPas == 'inscrit'){
+                $qb->andWhere('users = :user')
+                    ->setParameter('user', $user);
+            }
+            if($inscritOuPas == 'nonInscrit'){
+                $qb->andWhere('users <> :user')
+                    ->setParameter('user', $user);
+            }
+//            if($inscritOuPas == 'nonInscrit'){
+//                $qb->andWhere( 'users NOT IN (:users)')
+//                    ->setParameter('users', array($user));
+//            }
+//            $result = $entityManager->createQuery("SELECT e FROM $entity e
+//        WHERE e.ID NOT IN (:ids)")
+//                ->setParameter('ids', array(1, 2, 3), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+//                ->getResult();
         }
 
         if ($estPassee) {

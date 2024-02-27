@@ -23,7 +23,7 @@ class SortieSearchType extends AbstractType
 
         $builder
             ->add('siteParDefautOuPas', ChoiceType::class,[
-                'expanded'=>true,
+                'expanded'=>false,
                 'multiple'=>false,
                 'label'=>false,
                 'mapped'=>false,
@@ -59,18 +59,30 @@ class SortieSearchType extends AbstractType
                 'required'=>false,
                 'label'=>"Sorties dont je suis l'organisateur/trice"
             ])
-            ->add('inscrit', CheckboxType::class,[
-                'mapped'=>false,
-                'required'=>false,
-
-                'label'=>"Sorties auxquelles je suis instrit/e"
-            ])
-            ->add('nonInscrit', CheckboxType::class,[
-                'mapped'=>false,
-                'required'=>false,
-
-                'label'=>"Sorties auxquelles je ne suis pas instrit/e"
-            ])
+        ->add('inscritOuPas', ChoiceType::class,[
+            'expanded'=>false,
+            'multiple'=>false,
+            'label'=>'Inscrit ou Non ?',
+            'mapped'=>false,
+            'choices'=>[
+                'Inscrit : '=>'inscrit',
+                'Non Inscrit : '=>'nonInscrit',
+                'Inscrit + non inscrit : '=>'InscritOuNonInscrit',
+            ]
+        ])
+//            ->add('inscrit', CheckboxType::class,[
+//                'mapped'=>false,
+//                'required'=>false,
+//
+//                'label'=>"Sorties auxquelles je suis instrit/e"
+//            ])
+//            ->add('nonInscrit', CheckboxType::class,[
+//                'mapped'=>false,
+//                'required'=>false,
+//
+//                'label'=>"Sorties auxquelles je ne suis pas instrit/e"
+//            ])
+//
             ->add('passeesOuPas', CheckboxType::class,[
                 'mapped'=>false,
                 'required'=>false,
