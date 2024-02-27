@@ -79,15 +79,15 @@ class UserController extends AbstractController
 
     }
 
-    #[Route('user/list', name:'app_user_list')]
-    #[IsGranted('ROLE_ADMIN')]
-    public function listUsers(UserRepository $userRepository): Response
-    {
-        $users = $userRepository->findAll();
-
-        return $this->render('user/listUsers.html.twig', [
-            'users' => $users
-        ]);
-    }
+//    #[Route('user/list', name:'app_user_list')]
+//    #[IsGranted('ROLE_ADMIN')]
+//    public function listUsers(UserRepository $userRepository): Response
+//    {
+//        $users = $userRepository->findAll();
+//
+//        return $this->render('admin/listUsers.html.twig', [
+//            'users' => $users
+//        ]);
+//    }
 
 }

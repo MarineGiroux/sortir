@@ -1,0 +1,67 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block body %}
+
+    <h3>Gérer les ville</h3>
+
+    {# afficher form pour filtrer----------------------- -#}
+
+    {{ form_errors(form) }}
+    {{ form_start(form) }}
+
+    {{ form_row(form.nomVilleContient) }}
+    <button type="submit">Rechercher</button>
+    {{ form_end(form) }}
+
+
+    {# Afficher liste filtrée de villes  -------------------------------- -#}
+    {% if villes is empty %}
+        <p>Aucune ville trouvée</p>
+
+    {% else %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Ville</th>
+                <th>Code postal</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ville in villes %}
+                <tr>
+                    <td>{{ ville.nomVille }}</td>
+                    <td>{{ ville.codePostal }}</td>
+
+                    <td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_villes_update', {'id': ville.id}) }}" type="button"
+                               class="btn btn-outline-secondary">Modifier</a>
+                        {% endif %}
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_villes_delete', {'id': ville.id}) }}" type="button"
+                               class="btn btn-danger"  onclick="return confirm('Etes-vous sûr ?')">Supprimer</a>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">no records found</td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td></td>
+                <td><a href="{{ path('app_villes_create') }}">Ajouter</a></td>
+            </tr>
+
+            </tbody>
+
+        </table>
+    {% endif %}
+{% endblock %}
+ {% block title %}{{ parent() }} | Dashboard{% endblock %}
+
+

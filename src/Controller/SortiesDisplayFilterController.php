@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-//#[Route('/sorties/display/filter')]
+#[Route('/sorties/filers/')]
 class SortiesDisplayFilterController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
@@ -76,16 +76,17 @@ class SortiesDisplayFilterController extends AbstractController
             'form' => $form,
         ]);
     }
-
-    #[Route('/{id}', name: 'app_sorties_display_filter_show', methods: ['GET'])]
+//afficher detail sortie
+    #[Route('/show/{id}', name: 'app_sorties_display_filter_show', methods: ['GET'])]
     public function show(Sortie $sortie): Response
     {
+        dd($sortie);
         return $this->render('sorties_display_filter/show.html.twig', [
             'sortie' => $sortie,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_sorties_display_filter_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_sorties_display_filter_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
@@ -103,7 +104,7 @@ class SortiesDisplayFilterController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sorties_display_filter_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_sorties_display_filter_delete', methods: ['POST'])]
     public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
