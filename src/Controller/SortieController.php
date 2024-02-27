@@ -44,6 +44,8 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie, ['site' => $site]);
         $form->remove('site');
         $form->remove('motif');
+
+
         $form->handleRequest($request);
 
         $userRepository = $security->getUser();
@@ -56,6 +58,8 @@ class SortieController extends AbstractController
 
         $ville = new Ville();
         $form2 = $this->createForm(VilleType::class, $ville);
+        $form2->remove('nomVilleContient');
+
         $form2->handleRequest($request);
 
 
@@ -110,6 +114,7 @@ class SortieController extends AbstractController
         $form1->handleRequest($request);
 
         $form2 = $this->createForm(VilleType::class, $ville);
+        $form2->remove('nomVilleContient');
         $form2->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()
