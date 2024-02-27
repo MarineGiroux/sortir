@@ -52,13 +52,16 @@
 
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <td>
-                        {% set inscrit = false %}
+                        {% set flag = 0 %}
                         {% for user in sortie.users %}
-                            {% if app.user.email == user.email %}
-                                X
-                                {% set inscrit = true %}
+                            {% if user.email == app.user.email %}
+                                {% set flag = 1 %}
                             {% endif %}
                         {% endfor %}
+
+                        {% if flag ==1 %}
+                            x
+                        {% endif %}
                     </td>
                 {% endif %}
 
@@ -66,14 +69,21 @@
                 <td>
                     <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
 
-                    {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email %}
-                        {% if sortie.organisateur.id == app.user.id %}
-                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
-                        {% endif %}
+                    {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte']%}
+                        <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
                     {% endif %}
 
-                    {% if sortie.etat.libelle == 'Ouverte' and inscrit == false and is_granted('IS_AUTHENTICATED')%}
-                        <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+                    {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
+                        {% set flag = 0 %}
+                        {% for user in sortie.users %}
+                            {% if user.email == app.user.email %}
+                                {% set flag = 1 %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if flag == 0 %}
+                            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+                        {% endif %}
                     {% endif %}
 
                     {% if is_granted('IS_AUTHENTICATED') %}
