@@ -4,11 +4,10 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
@@ -92,8 +91,11 @@ class UserController extends AbstractController
     }
 
     #[Route('/profile/show/{id}', name: '_profile_show')]
-    public function showUserProfile(User $user): Response
+    public function showUserProfile(User $user, Request $request, SessionInterface $session): Response
     {
+        $referer = $request->headers->get('referer');
+        $session->set('previous_page_url', $referer);
+
         return $this->render('user/profilInscrit.html.twig', [
             'user' => $user,
         ]);

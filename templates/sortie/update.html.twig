@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 {% form_theme sortieform 'bootstrap_5_layout.html.twig' %}
-{% form_theme lieuform 'bootstrap_5_layout.html.twig' %}
-{% form_theme villeform 'bootstrap_5_layout.html.twig' %}
 
 {% block title %}Modification Sortie{% endblock %}
 
@@ -13,12 +11,14 @@
 
     {{ form_start(sortieform) }}
     {{ form_widget(sortieform) }}
-    {{ form_start(villeform) }}
-    {{ form_widget(villeform) }}
-    {{ form_start(lieuform) }}
-    {{ form_widget(lieuform) }}
 
+    <a href="{{ path('app_lieu_create') }}"><button type="button"  class="btn btn-outline-secondary">Ajouter un Lieu</button></a>
+    <br>
+    <br>
+
+    {% if sortie.etat.libelle != 'Ouverte' %}
     <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary"  >Enregistrer</button>
+    {% endif %}
     <button type="submit" name="submitAction"  value="ouvrir" class="btn btn-outline-secondary">Ouvrir la sortie</button>
     <a href="{{ path('app_sortie_annuler', {'id' : sortie.id }) }}"><button type="button" name="annuler" class="btn btn-outline-danger" >Annuler la sortie</button></a>
     <a href="{{ path('app_sortie_delete', {'id' : sortie.id }) }}" class="btn btn-outline-danger" onclick="return confirm('Etes-vous sûr ?')">Supprimer la sortie</a>

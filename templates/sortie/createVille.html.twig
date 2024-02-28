@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% form_theme villeform 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Créer une Ville{% endblock %}
+
+{% block body %}
+
+    <h2>Créer une Ville</h2>
+
+
+        {{ form_start(villeform) }}
+        {{ form_widget(villeform) }}
+
+    <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary">Créer une Ville</button>
+    <a href="{{ path('app_lieu_create') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Retour</button></a>
+
+    {{ form_end(villeform) }}
+
+
+
+{% endblock %}

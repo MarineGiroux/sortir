@@ -102,7 +102,28 @@ class VilleController extends AbstractController
         return $this->redirectToRoute('app_villes_list');
     }
 
+    #[Route('/create/sortie', name: '_create_sortie', methods: ['GET', 'POST'])]
+    public function createVilleSortie(Request $request, EntityManagerInterface $em): response
+    {
 
+        $ville = new Ville();
+
+        $form = $this->createForm(VilleType::class, $ville);
+        $form->remove('nomVilleContient');
+        $form -> handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($ville);
+            $em->flush();
+
+            $this->addFlash('success', 'La ville est créée');
+            return $this->redirectToRoute('app_lieu_create');
+        }
+
+        return $this->render('sortie/createVille.html.twig',[
+            'villeform' =>$form
+        ]);
+    }
 
 
 

@@ -11,7 +11,7 @@
         {% if user.photo is not empty %}
             <img src="{{ asset(photo_dir ~ '/' ~ user.photo) }}" class ="photo-profil" width="300px" loading="lazy" />
         {% else %}
-            <img src="{{ asset('assets/img/avatar.jpg') }}" class ="photo-profil" width="300px" loading="lazy" />
+            <img src="{{ asset('img/avatar.jpg') }}" class ="photo-profil" width="300px" loading="lazy" />
         {% endif %}
 
             <ul class="list-group">
@@ -22,7 +22,7 @@
             </ul>
         <br>
 
-        <a href="{{ path('app_sortie_detail', {'id': user.sortie.first().id}) }}" type="button" class="btn btn-outline-secondary">Retour</a>
+        <a href="{{ app.session.get('previous_page_url') }}" type="button" class="btn btn-outline-secondary">Retour</a>
 {#        <a href="{{ path('app_home') }}" class="btn btn-outline-primary mt-3">Retour à l'accueil</a>#}
     </div>
 

@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% form_theme sortieform 'bootstrap_5_layout.html.twig' %}
-{% form_theme lieuform 'bootstrap_5_layout.html.twig' %}
-{% form_theme villeform 'bootstrap_5_layout.html.twig' %}
+
 
 {% block title %}Créer Sortie{% endblock %}
 
@@ -13,12 +12,12 @@
 
     {{ form_start(sortieform) }}
     {{ form_widget(sortieform) }}
-    {{ form_start(villeform) }}
-    {{ form_widget(villeform) }}
-    {{ form_start(lieuform) }}
-    {{ form_widget(lieuform) }}
 
-    <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary">Créer la Sortie</button>
+    <a href="{{ path('app_lieu_create') }}"><button type="button"  class="btn btn-outline-secondary">Ajouter un Lieu</button></a>
+    <br>
+    <br>
+
+    <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary">Enregistrer la Sortie</button>
     <button type="submit" name="submitAction"  value="ouvrir" class="btn btn-outline-secondary">Ouvrir la sortie</button>
     <a href="{{ path('app_home') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Retour</button></a>
 

@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Lieu;
 use App\Entity\Site;
 use App\Entity\Sortie;
+use App\Repository\LieuRepository;
 use App\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -50,7 +52,11 @@ class SortieType extends AbstractType
             ->add('motif', TextareaType::class,[
                 'label' => 'Motif :',
                 'required' => false,
-            ]);
+            ])
+            ->add('lieu', EntityType::class,[
+                'class' => Lieu::class,
+                'choice_label' => 'nomLieu',
+                ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

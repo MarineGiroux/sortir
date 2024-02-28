@@ -33,7 +33,7 @@
         <tr>
             <th>Nom de la sortie</th>
             <th>Date de la sortie</th>
-            <th>Cloture</th>
+            <th>Cloture Inscriptions</th>
             <th>Inscrits/places</th>
             <th>Etat</th>
             {% if is_granted('IS_AUTHENTICATED')%}
@@ -54,7 +54,15 @@
                     <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d-m-Y H:i') : '' }}</td>
                     <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d-m-Y H:i') : '' }}</td>
                     <td>{{ sortie.users|length }}/{{ sortie.nbInscriptionMax }}</td>
-                    <td>{{ sortie.etat.libelle }}</td>
+                    {% if sortie.etat.libelle == 'Annulée' %}
+                        {% if sortie.motif is defined and sortie.motif is not empty %}
+                            <td data-toggle="tooltip" data-placement="right" title="{{ sortie.motif }}" class="tooltip-trigger">{{ sortie.etat.libelle }}</td>
+                        {% else %}
+                            <td data-toggle="tooltip" data-placement="right" title="Aucun motif disponible" class="tooltip-trigger">{{ sortie.etat.libelle }}</td>
+                        {% endif %}
+                    {% else %}
+                        <td>{{ sortie.etat.libelle }}</td>
+                    {% endif %}
 
                     {% if is_granted('IS_AUTHENTICATED') %}
                         <td>
@@ -71,7 +79,7 @@
                         </td>
                     {% endif %}
 
-                    <td>{{ sortie.organisateur.nom }}</td>
+                    <td>{{ sortie.organisateur.pseudo }}</td>
                     <td>
                         <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
 
