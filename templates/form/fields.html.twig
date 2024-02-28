@@ -1,0 +1,11 @@
+{% extends 'bootstrap_5_layout.html.twig' %}
+
+
+{% block widget %}
+
+        <div class="custom-input">
+            {{ form_errors(form) }}
+            {{ form_widget(form, {'attr': {'class': 'custom-widget'}}) }}
+        </div>
+
+{% endblock %}

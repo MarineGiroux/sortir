@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% form_theme form 'form/fields.html.twig' %}
 
 {% block title %}Sortie index{% endblock %}
 
@@ -22,11 +22,10 @@
 
         {{ form_start(form) }}
 
+
         {{ form_end(form) }}
 
     {% endif %}
-
-
 
     <table class="table">
         <thead>

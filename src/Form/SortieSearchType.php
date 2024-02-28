@@ -36,6 +36,10 @@ class SortieSearchType extends AbstractType
                 'class' => Site::class,
                 'choice_label' => 'nomSite',
                 'label'=>false,
+                'row_attr'=>[
+                    'class'=>' bg-light text-dark',
+                ],
+
 
             ])
             ->add('nomSortieContient', SearchType::class,[

@@ -8,6 +8,8 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+
+
 }
 
 footer{
@@ -17,10 +19,38 @@ footer{
     /*height:40px;*/
     /*width:100%;*/
 }
+.input-sortie-index-widget{
+    background-color: #dce6dc;
+}
 
-.navbar {
+.input-sortie-index-row{
+    background-color: #dce6dc;
+}
 
-    background-color: #899676;
+.custom-widget{
+    font-size: 18px;
+    padding: 5px 10px;
+    width: 100%;
+    padding-left: 35px;
+    outline: none;
+    background: #FFFFFF;
+    color: #32a852;
+    border: 1px solid #C4D1EB;
+    border-radius: 5px;
+    box-shadow: 3px 3px 2px 0px #E2E2E2;
+    transition: .3s ease;
+}
+
+.navbar  {
+
+    background-color: #f2c9b1;
+    font-size: 25px;
+}
+
+.navbar a:hover  {
+
+    background-color: #c9ab99;
+    font-size: 25px;
 }
 
 
