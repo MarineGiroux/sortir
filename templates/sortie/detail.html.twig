@@ -103,7 +103,7 @@
         </table>
     {% endif %}
 
-
+    {%  block buttons %}
     {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
         {% set flag = 0 %}
         {% for user in sortie.users %}
@@ -119,6 +119,6 @@
         {% endif %}
     {% endif %}
         <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour</button></a>
-
+    {% endblock %}
 
 {% endblock %}
