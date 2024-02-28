@@ -45,7 +45,7 @@
         </thead>
 
         <tbody>
-        {% set filteredSorties = sortie|filter(s => s.etat.libelle != 'Archivée') %}
+        {% set filteredSorties = sortie|filter(s => s.etat.libelle != 'Archivée' and s.etat.libelle != 'Créée') %}
 
         {% if filteredSorties|length > 0 %}
             {% for sortie in filteredSorties %}

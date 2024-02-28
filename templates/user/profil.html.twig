@@ -1,34 +1,131 @@
 {% extends 'base.html.twig' %}
-
-
-
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
 
 {% block title %}Sortir.com {% endblock %}
 
 {% block body %}
 
     <div class="container">
-    <h2 class="text-center">Ton profil {{ app.user.pseudo }}</h2>
+        <h2 class="text-center">Ton profil {{ app.user.pseudo }}</h2>
 
         {% if app.user.photo is not empty %}
-            <img src="{{ asset(photo_dir ~ '/' ~ app.user.photo) }}" class ="photo-profil" width="300px" loading="lazy" />
-            {% else %}
-                <img src="{{ asset('img/avatar.jpg') }}" class ="photo-profil" width="300px" loading="lazy" />
+            <img src="{{ asset(photo_dir ~ '/' ~ app.user.photo) }}" class="photo-profil" width="300px" loading="lazy" />
+        {% else %}
+            <img src="{{ asset('img/avatar.jpg') }}" class="photo-profil" width="300px" loading="lazy" />
         {% endif %}
 
         <ul class="list-group">
-        <li class="list-group-item">Prénom : {{ app.user.prenom }}</li>
-        <li class="list-group-item">Nom : {{ app.user.nom }}</li>
-        <li class="list-group-item">Téléphone : {{ app.user.telephone }}</li>
-        <li class="list-group-item">Email : {{ app.user.email }}</li>
-        <li class="list-group-item">Ville de rattachement : {{ app.user.site.nomSite }}</li>
-    </ul>
+            <li class="list-group-item">Prénom : {{ app.user.prenom }}</li>
+            <li class="list-group-item">Nom : {{ app.user.nom }}</li>
+            <li class="list-group-item">Téléphone : {{ app.user.telephone }}</li>
+            <li class="list-group-item">Email : {{ app.user.email }}</li>
+            <li class="list-group-item">Ville de rattachement : {{ app.user.site.nomSite }}</li>
+        </ul>
         <br>
-        <a href="{{ path('app_user_profile_update') }}"><button  type="reset" class="btn btn-outline-secondary">Modifier</button></a>
-        <a href="{{ path('app_home') }}"> <button  type="reset" class="btn btn-outline-danger">Retour</button></a>
+
+        <h3 class="text-center">Mes sorties</h3>
+
+        <br>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture Inscriptions</th>
+                <th>Inscrits/places</th>
+                <th>Etat</th>
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <th>Inscrit</th>
+                {% endif %}
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% set filteredSorties = sortie|filter(
+                s => s.organisateur == app.user or s.users.contains(app.user)
+            ) %}
+
+            {% if filteredSorties|length > 0 %}
+                {% for sortie in filteredSorties %}
+                    <tr>
+                        <td>{{ sortie.nomSortie }}</td>
+                        <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d-m-Y H:i') : '' }}</td>
+                        <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d-m-Y H:i') : '' }}</td>
+                        <td>{{ sortie.users|length }}/{{ sortie.nbInscriptionMax }}</td>
+                        {% if sortie.etat.libelle == 'Annulée' %}
+                            {% if sortie.motif is defined and sortie.motif is not empty %}
+                                <td data-toggle="tooltip" data-placement="right" title="{{ sortie.motif }}" class="tooltip-trigger">{{ sortie.etat.libelle }}</td>
+                            {% else %}
+                                <td data-toggle="tooltip" data-placement="right" title="Aucun motif disponible" class="tooltip-trigger">{{ sortie.etat.libelle }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>{{ sortie.etat.libelle }}</td>
+                        {% endif %}
+
+                        <td>
+                            {% set flag = 0 %}
+                            {% for user in sortie.users %}
+                                {% if user.email == app.user.email %}
+                                    {% set flag = 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if flag == 1 %}
+                                x
+                            {% endif %}
+                        </td>
+
+                        <td>{{ sortie.organisateur.pseudo }}</td>
+                        <td>
+                            <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
+
+                            {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte'] %}
+                                <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
+                            {% endif %}
+
+                            {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
+                                {% set flag = 0 %}
+                                {% for user in sortie.users %}
+                                    {% if user.email == app.user.email %}
+                                        {% set flag = 1 %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if flag == 0 and (sortie.users|length < sortie.nbInscriptionMax) %}
+                                    <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+                                {% else %}
+                                    <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
+                                {% endif %}
+
+                                {% if flag == 0 and (sortie.users|length >= sortie.nbInscriptionMax) %}
+                                    <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+                                {% endif %}
+
+                            {% endif %}
+
+                            {% if is_granted('IS_AUTHENTICATED') %}
+                                {% if sortie.etat.libelle in ['Créée', 'Ouverte'] and sortie.organisateur.id == app.user.id %}
+                                    <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucune sortie trouvée</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+
+        <br>
+        <a href="{{ path('app_user_profile_update') }}"><button type="reset" class="btn btn-outline-secondary">Modifier</button></a>
+        <a href="{{ path('app_home') }}"><button type="reset" class="btn btn-outline-danger">Retour</button></a>
 
     </div>
-
-
 
 {% endblock %}
