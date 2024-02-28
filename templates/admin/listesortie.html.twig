@@ -42,12 +42,8 @@
 
                 <td>{{ sortie.organisateur.nom }}</td>
                 <td>
-                    <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
-                    {% if is_granted('IS_AUTHENTICATED') %}
-                        {% if sortie.organisateur.id == app.user.id %}
-                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
-                        {% endif %}
-                    {% endif %}
+                    <a href="{{ path('app_dashboard-sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
+
 
                     {% if is_granted('ROLE_ADMIN') %}
                         {% if sortie.organisateur.id != app.user.id %}
@@ -58,6 +54,11 @@
                     {% if is_granted('ROLE_ADMIN')
                         and sortie.etat.libelle != 'Annulée'  %}
                         <a href="{{ path('app_dashboard-sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger" >Annuler</a>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_ADMIN')
+                        and sortie.etat.libelle == 'Annulée'  %}
+                        <a href="{{ path('app_dashboard-sortie_reactiver', {'id': sortie.id}) }}" type="button" class="btn btn-outline-success" >Reactiver la sortie</a>
                     {% endif %}
 
                 </td>
