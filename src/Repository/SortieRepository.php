@@ -27,7 +27,7 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @return Sortie[] Returns an array of Sortie objects
      */
-    public function filterSorties($user, $siteParDefautOuPas,$site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscrit,$nonInscrit,$estPassee):array
+    public function filterSorties($user, $siteParDefautOuPas,$site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscritOuPas,$estPassee):array
     {
         $qb = $this->createQueryBuilder('sorties')
             ->leftJoin('sorties.users', 'users');
@@ -62,30 +62,67 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
         }
 
-        if ($inscrit) {
-            $qb->andWhere('users = :user')
-                ->setParameter('user', $user);
-        }
+//        if ($inscrit) {
+//            $qb->andWhere('users = :user')
+//                ->setParameter('user', $user);
+//        }
+//
+//        if ($nonInscrit) {
+//            $qb->andWhere('users != :user')
+//                ->setParameter('user', $user);
+//        }
 
-        if ($nonInscrit) {
-            $qb->andWhere('users != :user')
-                ->setParameter('user', $user);
-        }
+
+//            if($inscritOuPas == 'nonInscrit'){
+//                $qb->andWhere( 'users NOT IN (:users)')
+//                    ->setParameter('users', array($user));
+//            }
+//            $result = $entityManager->createQuery("SELECT e FROM $entity e
+//        WHERE e.ID NOT IN (:ids)")
+//                ->setParameter('ids', array(1, 2, 3), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
+//                ->getResult();
+
 
         if ($estPassee) {
             $qb->andWhere("sorties.etat ='Passée'" );
         }
 
 
+        if($inscritOuPas){
+            if($inscritOuPas == 'inscrit'){
+                return $qb->andWhere('users = :user')
+                    ->setParameter('user', $user)
+                    ->orderBy('sorties.dateHeureDebut', 'ASC')
+                    ->setMaxResults(10)
+                    ->getQuery()
+                    ->getResult();
+            }
+            if($inscritOuPas == 'nonInscrit'){
+
+                $qb2 = $qb;
+                $toutesLesSorties = $qb
+                    ->orderBy('sorties.dateHeureDebut', 'ASC')
+                    ->setMaxResults(10)
+                    ->getQuery()
+                    ->getResult();
+                //dd($toutesLesSorties);
 
 
+                $sortiesOuInscrit = $qb2
+                    ->andWhere('users = :user')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->getResult();
+                //dd($sortiesOuInscrit);
 
+                $sortiesPasInscrit = array_udiff($toutesLesSorties,$sortiesOuInscrit, function ($obj_a, $obj_b) {
+                    return $obj_a->getId() - $obj_b->getId();
+                });
+                //dd($sortiesPasInscrit);
+                return $sortiesPasInscrit;
 
-//        dd($qb
-//            ->orderBy('sortie.dateHeureDebut', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult());
+            }
+        }
 
         return $qb
             ->orderBy('sorties.dateHeureDebut', 'ASC')
