@@ -104,19 +104,28 @@
     {% endif %}
 
     {%  block buttons %}
-    {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
-        {% set flag = 0 %}
-        {% for user in sortie.users %}
-            {% if user.email == app.user.email %}
-                {% set flag = 1 %}
-            {% endif %}
-        {% endfor %}
+        {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
+            {% set userIsRegistered = false %}
+            {% for user in sortie.users %}
+                {% if user.email == app.user.email %}
+                    {% set userIsRegistered = true %}
+                {% endif %}
+            {% endfor %}
 
-        {% if flag == 0 %}
-            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-        {% else %}
-            <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
-        {% endif %}
+            {% if not userIsRegistered and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now')) %}
+                <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+            {% elseif userIsRegistered %}
+                <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
+            {% endif %}
+
+            {% if not userIsRegistered and sortie.users|length >= sortie.nbInscriptionMax %}
+                <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+            {% endif %}
+
+            {% if not userIsRegistered and sortie.getDateLimiteInscription < date('now') %}
+                <button type="button" class="btn btn-outline-secondary" disabled>Trop tard!</button>
+            {% endif %}
+
     {% endif %}
         <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour</button></a>
     {% endblock %}

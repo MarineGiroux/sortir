@@ -25,6 +25,7 @@ class InscriptionController extends AbstractController
         if (
             $sortie->getEtat()->getLibelle() == 'Ouverte'
             && count($participants) < $sortie->getNbInscriptionMax()
+            && $sortie->getDateLimiteInscription() > new \DateTime()
             && !in_array($user, $participants, true)
         ) {
             $sortie->addUser($user);

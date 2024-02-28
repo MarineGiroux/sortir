@@ -87,21 +87,25 @@
                             {% endif %}
 
                             {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
-                                {% set flag = 0 %}
+                                {% set userIsRegistered = false %}
                                 {% for user in sortie.users %}
                                     {% if user.email == app.user.email %}
-                                        {% set flag = 1 %}
+                                        {% set userIsRegistered = true %}
                                     {% endif %}
                                 {% endfor %}
 
-                                {% if flag == 0 and (sortie.users|length < sortie.nbInscriptionMax) %}
+                                {% if not userIsRegistered and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now')) %}
                                     <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-                                {% else %}
+                                {% elseif userIsRegistered %}
                                     <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
                                 {% endif %}
 
-                                {% if flag == 0 and (sortie.users|length >= sortie.nbInscriptionMax) %}
+                                {% if not userIsRegistered and sortie.users|length >= sortie.nbInscriptionMax %}
                                     <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+                                {% endif %}
+
+                                {% if not userIsRegistered and sortie.getDateLimiteInscription < date('now') %}
+                                    <button type="button" class="btn btn-outline-secondary" disabled>Trop tard!</button>
                                 {% endif %}
 
                             {% endif %}
