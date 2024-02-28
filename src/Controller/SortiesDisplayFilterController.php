@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sorties/display/filter')]
+#[Route('/sorties/filers')]
 class SortiesDisplayFilterController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]

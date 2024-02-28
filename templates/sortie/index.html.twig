@@ -33,7 +33,7 @@
         <tr>
             <th>Nom de la sortie</th>
             <th>Date de la sortie</th>
-            <th>Cloture Inscriptions</th>
+            <th>Clôture Inscriptions</th>
             <th>Inscrits/places</th>
             <th>Etat</th>
             {% if is_granted('IS_AUTHENTICATED')%}
@@ -95,18 +95,18 @@
                                 {% endif %}
                             {% endfor %}
 
-                        {% if flag == 0 and (sortie.users|length < sortie.nbInscriptionMax) %}
-                            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-                        {% endif %}
-                        {% else %}
-                            <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
-                        {% endif %}
+                            {% if flag == 0 and (sortie.users|length < sortie.nbInscriptionMax) %}
+                                <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
 
-                        {% if flag == 0 and (sortie.users|length >= sortie.nbInscriptionMax) %}
-                            <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
-                        {% endif %}
+                            {% else %}
+                                <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
+                            {% endif %}
 
-                    {% endif %}
+                            {% if flag == 0 and (sortie.users|length >= sortie.nbInscriptionMax) %}
+                                <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+                            {% endif %}
+
+                        {% endif %}
 
                         {% if is_granted('IS_AUTHENTICATED') %}
                             {% if sortie.etat.libelle in ['Créée', 'Ouverte'] and sortie.organisateur.id == app.user.id %}
