@@ -45,12 +45,12 @@
          <td>{{ user.pseudo }}</td>
          <td>{{ user.email }}</td>
          <td>
-             <a href="{{ path('app_user_delete', {'id' : user.id}) }}"> <button  type="button" class="btn btn-outline-primary" onclick="return confirm('Etes-vous sûr ?')" >Supprimer Utilisateur</button></a>
+             <a href="{{ path('app_user_delete', {'id' : user.id}) }}"> <button  type="button" class="btn btn-outline-danger" onclick="return confirm('Etes-vous sûr ?')" >Supprimer Utilisateur</button></a>
 
             {% if user.isActif %}
-            <a href="{{ path('app_user_desactivate', {'id' : user.id}) }}"> <button  type="button" class="btn btn-outline-secondary" onclick="return confirm('Etes-vous sûr ?')">Désactiver Utilisateur</button></a>
+            <a href="{{ path('app_user_desactivate', {'id' : user.id}) }}"> <button  type="button" class="btn btn-outline-danger" onclick="return confirm('Etes-vous sûr ?')">Désactiver Utilisateur</button></a>
             {% else%}
-            <a href="{{ path('app_user_reactivate', {'id' : user.id}) }}"> <button  type="button" class="btn btn-outline-secondary" onclick="return confirm('Etes-vous sûr ?')">Reactiver Utilisateur</button></a>
+            <a href="{{ path('app_user_reactivate', {'id' : user.id}) }}"> <button  type="button" class="btn btn-outline-success" onclick="return confirm('Etes-vous sûr ?')">Reactiver Utilisateur</button></a>
 {% endif %}
          </td>
 

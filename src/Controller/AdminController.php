@@ -50,6 +50,15 @@ class AdminController extends AbstractController
     }
 
 
+    #[Route('/admin/sorties/detail/{id}', name: 'app_dashboard-sortie_detail', requirements: ['id' => '\d+'])]
+    public function detailSortie(Sortie $sortie): Response
+    {
+        return $this->render('admin/detailSortie.html.twig', [
+            'sortie' => $sortie,
+        ]);
+    }
+
+
     #[Route('/admin/sorties/annuler/{id}', name: 'app_dashboard-sortie_annuler', requirements: ['id' => '\d+'])]
     public function annulerSortie(Request $request, EntityManagerInterface $entityManager, Sortie $sortie, EtatRepository $etatRepository, Security $security): Response
     {
@@ -78,7 +87,7 @@ class AdminController extends AbstractController
                 $entityManager->persist($sortie);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_dashboard-sortie');
             }
 
 
@@ -87,6 +96,46 @@ class AdminController extends AbstractController
             'sortieform' => $form, 'sortie' => $sortie
         ]);
     }
+
+
+    #[Route('/admin/sorties/reactiver/{id}', name: 'app_dashboard-sortie_reactiver', requirements: ['id' => '\d+'])]
+    public function reactiverSortie(Request $request, EntityManagerInterface $entityManager, Sortie $sortie, EtatRepository $etatRepository, Security $security): Response
+    {
+        $form = $this->createForm(SortieType::class, $sortie);
+
+        $form->remove('nomSortie');
+        $form->remove('dateHeureDebut');
+        $form->remove('dateLimiteInscription');
+        $form->remove('nbInscriptionMax');
+        $form->remove('duree');
+        $form->remove('infosSortie');
+        $form->remove('lieu');
+        $form->remove('site');
+
+        $form->handleRequest($request);
+
+        $userRepository = $security->getUser();
+        $sortie->setOrganisateur($userRepository);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($request->request->get('submitAction') == 'annuler') {
+                $sortie->setEtat($etatRepository->find(2));
+
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_dashboard-sortie');
+            }
+
+
+        }
+        return $this->render('admin/reactiverSortie.html.twig', [
+            'sortieform' => $form, 'sortie' => $sortie
+        ]);
+    }
+
 
 
 
