@@ -26,12 +26,13 @@ class SortieRepository extends ServiceEntityRepository
 
     /**
      * @return Sortie[] Returns an array of Sortie objects
+     * la requête en querybuilder (qb) se complète à mesure que les champs du formulaire sont renseignés
      */
     public function filterSorties($user, $siteParDefautOuPas,$site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscritOuPas,$estPassee):array
     {
         $qb = $this->createQueryBuilder('sorties')
             ->leftJoin('sorties.users', 'users');
-
+        // si user défini on a la choix de conservr ou non le site de l'user par défaut
         if ($user) {
             if ($siteParDefautOuPas == 'conserverSite') {
                 $qb->andWhere('sorties.site = :site')
@@ -62,47 +63,31 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
         }
 
-//        if ($inscrit) {
-//            $qb->andWhere('users = :user')
-//                ->setParameter('user', $user);
-//        }
-//
-//        if ($nonInscrit) {
-//            $qb->andWhere('users != :user')
-//                ->setParameter('user', $user);
-//        }
-
-
-//            if($inscritOuPas == 'nonInscrit'){
-//                $qb->andWhere( 'users NOT IN (:users)')
-//                    ->setParameter('users', array($user));
-//            }
-//            $result = $entityManager->createQuery("SELECT e FROM $entity e
-//        WHERE e.ID NOT IN (:ids)")
-//                ->setParameter('ids', array(1, 2, 3), \Doctrine\DBAL\Connection::PARAM_INT_ARRAY)
-//                ->getResult();
-
 
         if ($estPassee) {
             $qb->andWhere("sorties.etat ='Passée'" );
         }
-
 
         if($inscritOuPas){
             if($inscritOuPas == 'inscrit'){
                 return $qb->andWhere('users = :user')
                     ->setParameter('user', $user)
                     ->orderBy('sorties.dateHeureDebut', 'ASC')
-                    ->setMaxResults(10)
+                    ->setMaxResults(20)
                     ->getQuery()
                     ->getResult();
             }
+
+            //on crée un array de toutes les sorties déjà filtré,
+            // puis un array avec les mêmes sorties où l'user est inscrit,
+            //avec la fonction array_udiff on crée un troisième array qui rassemble la différences des deux,
+            //où le user n'est pas inscrit'
             if($inscritOuPas == 'nonInscrit'){
 
                 $qb2 = $qb;
                 $toutesLesSorties = $qb
                     ->orderBy('sorties.dateHeureDebut', 'ASC')
-                    ->setMaxResults(10)
+                    ->setMaxResults(20)
                     ->getQuery()
                     ->getResult();
                 //dd($toutesLesSorties);
@@ -120,20 +105,16 @@ class SortieRepository extends ServiceEntityRepository
                 });
                 //dd($sortiesPasInscrit);
                 return $sortiesPasInscrit;
-
             }
         }
 
         return $qb
             ->orderBy('sorties.dateHeureDebut', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults(20)
             ->getQuery()
-            ->getResult();
-    }
-
+            ->getResult();   }
 
     public function getAllSortiesWithUsers($user):array {
-//        dd($user->getSite());
 
         if (!$user){
             $qb = $this->createQueryBuilder('sorties')

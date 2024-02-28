@@ -32,7 +32,7 @@
         <tr>
             <th>Nom de la sortie</th>
             <th>Date de la sortie</th>
-            <th>Cloture</th>
+            <th>Clôture</th>
             <th>Inscrits/places</th>
             <th>Etat</th>
             <th>Inscrit</th>
@@ -81,9 +81,14 @@
                             {% endif %}
                         {% endfor %}
 
-                        {% if flag == 0 %}
+                        {% if flag == 0 and (sortie.users|length < sortie.nbInscriptionMax) %}
                             <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
                         {% endif %}
+
+                        {% if flag == 0 and (sortie.users|length >= sortie.nbInscriptionMax) %}
+                            <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+                        {% endif %}
+
                     {% endif %}
 
                     {% if is_granted('IS_AUTHENTICATED') %}
@@ -97,7 +102,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">Aucune sortie trouvée</td>
             </tr>
         {% endfor %}
         </tbody>

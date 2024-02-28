@@ -40,7 +40,6 @@ class InscriptionController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-
     #[Route('/desistement', name: 'desistement')]
     public function desistement(): Response
     {
