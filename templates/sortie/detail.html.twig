@@ -96,14 +96,15 @@
         </tbody>
     </table>
 
-    {% if sortie.etat.libelle == 'Ouverte' and (sortie.users|length < sortie.nbInscriptionMax)%}
-        <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-    {% endif %}
+    {%  block buttons %}
+        {% if sortie.etat.libelle == 'Ouverte' and (sortie.users|length < sortie.nbInscriptionMax)%}
+            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+        {% endif %}
 
-    {% if sortie.users|length >= sortie.nbInscriptionMax %}
-        <button type="button" class="btn btn-outline-secondary" disabled>Inscription complète</button>
-    {% endif %}
+        {% if sortie.users|length >= sortie.nbInscriptionMax %}
+            <button type="button" class="btn btn-outline-secondary" disabled>Inscription complète</button>
+        {% endif %}
         <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour page d'accueil</button></a>
-
+    {% endblock %}
 
 {% endblock %}
