@@ -95,12 +95,18 @@
                                 {% endif %}
                             {% endfor %}
 
-                            {% if flag == 0 %}
-                                <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-                            {% else %}
-                                <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
-                            {% endif %}
+                        {% if flag == 0 and (sortie.users|length < sortie.nbInscriptionMax) %}
+                            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
                         {% endif %}
+                        {% else %}
+                            <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
+                        {% endif %}
+
+                        {% if flag == 0 and (sortie.users|length >= sortie.nbInscriptionMax) %}
+                            <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+                        {% endif %}
+
+                    {% endif %}
 
                         {% if is_granted('IS_AUTHENTICATED') %}
                             {% if sortie.etat.libelle in ['Créée', 'Ouverte'] and sortie.organisateur.id == app.user.id %}
@@ -112,7 +118,7 @@
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">Aucune sortie trouvée</td>
             </tr>
         {% endif %}
         </tbody>

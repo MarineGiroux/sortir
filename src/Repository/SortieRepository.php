@@ -26,63 +26,111 @@ class SortieRepository extends ServiceEntityRepository
 
     /**
      * @return Sortie[] Returns an array of Sortie objects
+     * la requête en querybuilder (qb) se complète à mesure que les champs du formulaire sont renseignés
      */
-    public function filterSorties($user, $idSite, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $estInscrit): array
+    public function filterSorties($user, $siteParDefautOuPas,$site, $nomContient, $dateDebut, $dateFin, $estOrganisateur, $inscritOuPas,$estPassee):array
     {
-
-        $qb = $this->createQueryBuilder('sortie')
-                ->join('sortie.users', 'users')
-                ->where('sortie.site = :idSite')
-                ->setParameter('idSite', $idSite)
-        ;
-
-        if($nomContient){
-            $qb->andWhere("sortie.nomSortie LIKE :nomContient")
-                ->setParameter('nomContient', '%'.$nomContient.'%');
-        }
-
-        if($dateDebut && $dateFin){
-            $qb->andWhere('sortie.dateHeureDebut BETWEEN :dateDebut AND :dateFin')
-                    ->setParameter('dateDebut', $dateDebut)
-                    ->setParameter('dateFin', $dateFin);
+        $qb = $this->createQueryBuilder('sorties')
+            ->leftJoin('sorties.users', 'users');
+        // si user défini on a la choix de conservr ou non le site de l'user par défaut
+        if ($user) {
+            if ($siteParDefautOuPas == 'conserverSite') {
+                $qb->andWhere('sorties.site = :site')
+                    ->setParameter('site', $user->getSite());
+            } elseif ($siteParDefautOuPas == 'choisirSite') {
+                $qb->andWhere('sorties.site = :site')
+                    ->setParameter('site', $site);
             }
-//        $estOrganisateur =$form->get('organisateurOuPas')->getData();
-//        $estInscrit =$form->get('inscritOuPas')->getData();
-//        $nEstPasInscrit =$form->get('nonInscritOuPas')->getData();
-//        $estPassee =$form->get('passeesOuPas')->getData();
+        }
 
-        if($estOrganisateur){
-            $qb->andWhere('sortie.organisateur = :user')
+        if ($nomContient) {
+            $qb->andWhere("sorties.nomSortie LIKE :nomContient")
+                ->setParameter('nomContient', '%' . $nomContient . '%');
+        }
+
+        if($dateDebut){
+            $qb->andWhere('sorties.dateHeureDebut >= :dateDebut')
+                ->setParameter('dateDebut', $dateDebut);
+        }
+
+        if($dateFin){
+            $qb->andWhere('sorties.dateHeureDebut <= :dateFin')
+                ->setParameter('dateFin', $dateFin);
+        }
+
+        if ($estOrganisateur) {
+            $qb->andWhere('sorties.organisateur = :user')
                 ->setParameter('user', $user);
         }
 
-        if($estInscrit){
-            $qb-> andWhere('users = :user')
-                ->setParameter('user', $user);
+
+        if ($estPassee) {
+            $qb->andWhere("sorties.etat ='Passée'" );
         }
 
+        if($inscritOuPas){
+            if($inscritOuPas == 'inscrit'){
+                return $qb->andWhere('users = :user')
+                    ->setParameter('user', $user)
+                    ->orderBy('sorties.dateHeureDebut', 'ASC')
+                    ->setMaxResults(20)
+                    ->getQuery()
+                    ->getResult();
+            }
 
-//        dd($qb
-//            ->orderBy('sortie.dateHeureDebut', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult());
+            //on crée un array de toutes les sorties déjà filtré,
+            // puis un array avec les mêmes sorties où l'user est inscrit,
+            //avec la fonction array_udiff on crée un troisième array qui rassemble la différences des deux,
+            //où le user n'est pas inscrit'
+            if($inscritOuPas == 'nonInscrit'){
+
+                $qb2 = $qb;
+                $toutesLesSorties = $qb
+                    ->orderBy('sorties.dateHeureDebut', 'ASC')
+                    ->setMaxResults(20)
+                    ->getQuery()
+                    ->getResult();
+                //dd($toutesLesSorties);
+
+
+                $sortiesOuInscrit = $qb2
+                    ->andWhere('users = :user')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->getResult();
+                //dd($sortiesOuInscrit);
+
+                $sortiesPasInscrit = array_udiff($toutesLesSorties,$sortiesOuInscrit, function ($obj_a, $obj_b) {
+                    return $obj_a->getId() - $obj_b->getId();
+                });
+                //dd($sortiesPasInscrit);
+                return $sortiesPasInscrit;
+            }
+        }
 
         return $qb
-            ->orderBy('sortie.dateHeureDebut', 'ASC')
-            ->setMaxResults(10)
+            ->orderBy('sorties.dateHeureDebut', 'ASC')
+            ->setMaxResults(20)
             ->getQuery()
-            ->getResult()
-        ;
-    }
+            ->getResult();   }
 
-    public function getAllSortiesWithUsers() {
+    public function getAllSortiesWithUsers($user):array {
+
+        if (!$user){
+            $qb = $this->createQueryBuilder('sorties')
+                ->addSelect('users')
+                ->leftJoin('sorties.users', 'users');
+            return $qb
+                ->getQuery()
+                ->getResult();
+        }
 
         $qb = $this->createQueryBuilder('sorties')
             ->addSelect('users')
             ->leftJoin('sorties.users', 'users')
+            ->andWhere('sorties.site = :site')
+            ->setParameter('site', $user->getSite())
         ;
-
         return $qb
             ->getQuery()
             ->getResult();

@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,11 +19,23 @@ class SortieSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $nomSiteUser = $options['nomSiteUser'];
+
         $builder
+            ->add('siteParDefautOuPas', ChoiceType::class,[
+                'expanded'=>false,
+                'multiple'=>false,
+                'label'=>false,
+                'mapped'=>false,
+                'choices'=>[
+                    'VOTRE SITE PAR DEFAUT : '.$nomSiteUser=>'conserverSite',
+                    'SINON FAITES VOTRE CHOIX :'=>'choisirSite',
+                ]
+            ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nomSite',
-                'label'=>"Choisir votre site :",
+                'label'=>false,
 
             ])
             ->add('nomSortieContient', SearchType::class,[
@@ -40,24 +53,36 @@ class SortieSearchType extends AbstractType
                 'required'=>false,
                 'label'=>"et:",
             ])
+
             ->add('organisateurOuPas', CheckboxType::class,[
                 'mapped'=>false,
                 'required'=>false,
-
                 'label'=>"Sorties dont je suis l'organisateur/trice"
             ])
-            ->add('inscritOuPas', CheckboxType::class,[
-                'mapped'=>false,
-                'required'=>false,
-
-                'label'=>"Sorties auxquelles je suis instrit/e"
-            ])
-            ->add('nonInscritOuPas', CheckboxType::class,[
-                'mapped'=>false,
-                'required'=>false,
-
-                'label'=>"Sorties auxquelles je ne suis pas instrit/e"
-            ])
+        ->add('inscritOuPas', ChoiceType::class,[
+            'expanded'=>false,
+            'multiple'=>false,
+            'label'=>'Inscrit ou Non ?',
+            'mapped'=>false,
+            'choices'=>[
+                'Inscrit : '=>'inscrit',
+                'Non Inscrit : '=>'nonInscrit',
+                'Inscrit + non inscrit : '=>'InscritOuNonInscrit',
+            ]
+        ])
+//            ->add('inscrit', CheckboxType::class,[
+//                'mapped'=>false,
+//                'required'=>false,
+//
+//                'label'=>"Sorties auxquelles je suis instrit/e"
+//            ])
+//            ->add('nonInscrit', CheckboxType::class,[
+//                'mapped'=>false,
+//                'required'=>false,
+//
+//                'label'=>"Sorties auxquelles je ne suis pas instrit/e"
+//            ])
+//
             ->add('passeesOuPas', CheckboxType::class,[
                 'mapped'=>false,
                 'required'=>false,
@@ -75,6 +100,8 @@ class SortieSearchType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'nomSiteUser'=>null,
+            'data_class'=>null,
         ]);
     }
 }

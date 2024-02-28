@@ -51,7 +51,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/admin/sorties/annuler/{id}', name: 'app_dashboard-sortie_annuler', requirements: ['id' => '\d+'])]
-    public function annuler(Request $request, EntityManagerInterface $entityManager, Sortie $sortie, EtatRepository $etatRepository, Security $security): Response
+    public function annulerSortie(Request $request, EntityManagerInterface $entityManager, Sortie $sortie, EtatRepository $etatRepository, Security $security): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
 
