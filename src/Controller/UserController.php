@@ -86,7 +86,7 @@ class UserController extends AbstractController
     {
         $users = $userRepository->findAll();
 
-        return $this->render('user/listUsers.html.twig', [
+        return $this->render('admin/listUsers.html.twig', [
             'users' => $users
         ]);
     }
@@ -97,6 +97,28 @@ class UserController extends AbstractController
         return $this->render('user/profilInscrit.html.twig', [
             'user' => $user,
         ]);
+    }
+    #[Route('/inactif/{id}',  name:'_desactivate', requirements: ['id' => '\d+'])]
+    public function desactivateUser(User $user, EntityManagerInterface $em): Response
+    {
+        $user->setIsActif(false);
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('app_user_list');
+
+    }
+
+    #[Route('/actif/{id}',  name:'_reactivate', requirements: ['id' => '\d+'])]
+    public function reactivateUser(User $user,  EntityManagerInterface $em): Response
+    {
+
+        $user->setIsActif(true);
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('app_user_list');
+
     }
 
 }
