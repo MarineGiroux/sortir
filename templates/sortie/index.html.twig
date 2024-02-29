@@ -37,6 +37,8 @@
                             <th>Clôture Inscrip.</th>
                             <th>Inscrits/places</th>
                             <th>Etat</th>
+                            {# Si je suis déco je ne vois pas si je suis inscrit           #}
+
                             {% if is_granted('IS_AUTHENTICATED')%}
                                 <th>Inscrit</th>
                             {% endif %}
@@ -46,24 +48,38 @@
                         </thead>
 
         <tbody>
+        {# Filtre les sorties pour ne pas voir les Archivées et les créées  #}
         {% set filteredSorties = sortie|filter(s => s.etat.libelle != 'Archivée' and s.etat.libelle != 'Créée') %}
+        {# Si il y a des sorties alors ca affiche : #}
 
                         {% if filteredSorties|length > 0 %}
+                            {# Boucle for pour afficher les sorties : #}
+
                             {% for sortie in filteredSorties %}
                                 <tr>
                                     <td class="fitwidth">{{ sortie.nomSortie }}</td>
                                     <td class="fitwidth">{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d-m-Y H:i') : '' }}</td>
                                     <td class="fitwidth">{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d-m-Y H:i') : '' }}</td>
                                     <td class="fitwidth">{{ sortie.users|length }}/{{ sortie.nbInscriptionMax }}</td>
+                                    {# Si Sortie à l'état annulé : #}
+
                                     {% if sortie.etat.libelle == 'Annulée' %}
+                                        {# Si un motif est défini motif est non vide écrite le motif dans une tooltip : #}
+
                                         {% if sortie.motif is defined and sortie.motif is not empty %}
                                             <td data-toggle="tooltip" data-placement="right" title="{{ sortie.motif }}" class="tooltip-trigger">{{ sortie.etat.libelle }}</td>
+                                            {# Sinon mettre message par défaut : #}
+
                                         {% else %}
                                             <td data-toggle="tooltip" data-placement="right" title="Aucun motif disponible" class="tooltip-trigger">{{ sortie.etat.libelle }}</td>
                                         {% endif %}
+                                        {# Sinon afficher l'état : #}
+
                                     {% else %}
                                         <td>{{ sortie.etat.libelle }}</td>
                                     {% endif %}
+                                    {#  Verifier si au moins une occurence de l'user connecté dans la liste des participants,
+                    avec l'usage d'un flag, si flag == 1 => user participant à la sortie#}
 
                                     {% if is_granted('IS_AUTHENTICATED') %}
                                         <td class="fitwidth">
@@ -120,6 +136,62 @@
                         </tbody>
                     </table>
             </div>
+                    <td>{{ sortie.organisateur.pseudo }}</td>
+                    <td>
+                        {#  Bouton afficher apparait dans tous les cas !                  #}
+                        <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
+
+                        {#  Si je suis authentifié que je suis orga et que l'état est créée ou ouverte alors afficher le bouton Modifier                 #}
+                        {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte']%}
+                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
+                        {% endif %}
+
+                        {#  Une autre méthode pour vérifier si l'user participe à la sortie  #}
+                        {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
+                            {% set userIsRegistered = false %}
+                            {% for user in sortie.users %}
+                                {% if user.email == app.user.email %}
+                                    {% set userIsRegistered = true %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {#  Si je suis pas enregistré et le nombre de participant est inférieur au nombre max et que la date de cloture d'inscription est sup à mtn le bouton s'inscrire apparait     #}
+                            {% if not userIsRegistered and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now'))  %}
+                                <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+                            {#  Sinon si je suis déja enregistré le bouton se désinscrire apparait     #}
+                            {% elseif userIsRegistered %}
+                                <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
+                            {% endif %}
+
+                            {#  Si je suis pas enregistré et le nombre de participant est >= au nombre max le bouton complet apparait     #}
+                            {% if not userIsRegistered and sortie.users|length >= sortie.nbInscriptionMax %}
+                                <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+                            {% endif %}
+
+                            {#  Si je suis pas enregistré et que la date de cloture d'inscription est inf à mtn le bouton trop tard! apparait     #}
+                            {% if not userIsRegistered and sortie.getDateLimiteInscription < date('now') %}
+                                <button type="button" class="btn btn-outline-secondary" disabled>Trop tard!</button>
+                            {% endif %}
+                        {% endif %}
+
+                        {#  Si je suis connecté et l'état est soit Créee soit Ouverte (fait partie d'une liste prédéfinie:                  #}
+                        {% if is_granted('IS_AUTHENTICATED') %}
+                            {#  Si l'état de la sortie est créée ou ouverte et que je suis orga : le bouton annuler apparait   #}
+                            {% if sortie.etat.libelle in ['Créée', 'Ouverte'] and sortie.organisateur.id == app.user.id %}
+                                <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}" type="button" class="btn btn-outline-danger">Annuler</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {# Si pas de sorties ça affiche ca : #}
+        {% else %}
+            <tr>
+                <td colspan="8">Aucune sortie trouvée</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
 
             {% if is_granted('IS_AUTHENTICATED') %}
                 <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
