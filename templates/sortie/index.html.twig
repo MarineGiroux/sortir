@@ -5,8 +5,10 @@
 
 {% block body %}
 
+    {% if is_granted('IS_AUTHENTICATED') %}
             <h1>Filtrer les sorties</h1>
-            <br>
+    {% endif %}
+
             <div>
                 <h3>Date du jour : {{ "now"|date("d/m/Y") }}</h3>
                 <br>

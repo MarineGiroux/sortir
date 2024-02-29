@@ -32,7 +32,7 @@
 
 </head>
 
-<body >
+<body style="background-image: url('{{ asset('img/paysage.svg') }}');">
 <header>
     {% include('navbar.html.twig') %}
 {#    {% if is_granted('ROLE_ADMIN') %}#}
@@ -41,7 +41,7 @@
 </header>
 
 <main class="flex-grow-1">
-    <div class="container-md align-items-center main-ctn">
+    <div class="container-md align-items-center main-ctn" >
         <div class="container-md secondary-ctn">
                 {% block body %}
 
@@ -53,8 +53,8 @@
 
 </main>
 
-<footer class="bg-body-tertiary text-center text-lg-start">
-    <div class="text-center p-3" style="background-color: #89967680;">
+<footer class="bg-body-tertiary text-center text-lg-start fixed-bottom">
+    <div class="text-center p-3" >
         &copy; sortir.com {{ "now"|date("Y") }}
     </div>
 </footer>
