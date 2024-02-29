@@ -1,6 +1,7 @@
 *{
     color: darkslategrey;
 
+
 }
 
 a:link {
@@ -95,7 +96,6 @@ footer > div{
     /*position:relative;*/
     /*left:0px;*/
     /*bottom:0px;*/
-    /*height:0px;*/
     width:100%;
     background-color: #f2c9b1;
 }
@@ -103,13 +103,14 @@ footer > div{
 .navbar  {
 
     background-color: #f2c9b1;
-    font-size: 25px;
+    font-size: 15px;
+
 }
 
 .navbar a:hover  {
 
     background-color: #c9ab99;
-    font-size: 25px;
+    font-size: 18px;
 }
 
 .titre-nav{

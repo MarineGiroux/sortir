@@ -69,9 +69,10 @@ class SortieSearchType extends AbstractType
             'label'=>'Inscrit ou Non ?',
             'mapped'=>false,
             'choices'=>[
+                'Inscrit + non inscrit : '=>'InscritOuNonInscrit',
                 'Inscrit : '=>'inscrit',
                 'Non Inscrit : '=>'nonInscrit',
-                'Inscrit + non inscrit : '=>'InscritOuNonInscrit',
+
             ]
         ])
 //            ->add('inscrit', CheckboxType::class,[
