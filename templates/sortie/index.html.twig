@@ -98,11 +98,17 @@
 
                                     <td class="fitwidth">{{ sortie.organisateur.pseudo }}</td>
                                     <td class="fitwidth">
+                                        {#  Bouton afficher apparait dans tous les cas !                  #}
+
                                         <div class="btn-group d-flex flex-column flex-md-row" role="group" aria-label="Basic example">
                                             <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
+                                            {#  Si je suis authentifié que je suis orga et que l'état est créée ou ouverte alors afficher le bouton Modifier                 #}
+
                                             {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte']%}
                                                 <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
                                             {% endif %}
+                                            {#  Une autre méthode pour vérifier si l'user participe à la sortie  #}
+
                                             {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
                                                 {% set flag = 0 %}
                                                 {% for user in sortie.users %}
@@ -130,32 +136,15 @@
                             {% endfor %}
                         {% else %}
                             <tr>
+                                {# Si pas de sorties ça affiche ca : #}
                                 <td colspan="8">Aucune sortie trouvée</td>
                             </tr>
                         {% endif %}
                         </tbody>
                     </table>
             </div>
-                    <td>{{ sortie.organisateur.pseudo }}</td>
-                    <td>
-                        {#  Bouton afficher apparait dans tous les cas !                  #}
-                        <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>
 
-                        {#  Si je suis authentifié que je suis orga et que l'état est créée ou ouverte alors afficher le bouton Modifier                 #}
-                        {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte']%}
-                            <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
-                        {% endif %}
 
-                        {#  Une autre méthode pour vérifier si l'user participe à la sortie  #}
-                        {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
-                            {% set userIsRegistered = false %}
-                            {% for user in sortie.users %}
-                                {% if user.email == app.user.email %}
-                                    {% set userIsRegistered = true %}
-                                {% endif %}
-                            {% endfor %}
-
-                            {#  Si je suis pas enregistré et le nombre de participant est inférieur au nombre max et que la date de cloture d'inscription est sup à mtn le bouton s'inscrire apparait     #}
                             {% if not userIsRegistered and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now'))  %}
                                 <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
                             {#  Sinon si je suis déja enregistré le bouton se désinscrire apparait     #}
@@ -184,14 +173,7 @@
                     </td>
                 </tr>
             {% endfor %}
-        {# Si pas de sorties ça affiche ca : #}
-        {% else %}
-            <tr>
-                <td colspan="8">Aucune sortie trouvée</td>
-            </tr>
-        {% endif %}
-        </tbody>
-    </table>
+
 
             {% if is_granted('IS_AUTHENTICATED') %}
                 <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
