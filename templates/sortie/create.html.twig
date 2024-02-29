@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% form_theme sortieform 'bootstrap_5_layout.html.twig' %}
 
-
 {% block title %}Créer Sortie{% endblock %}
 
 {% block body %}
@@ -9,22 +8,28 @@
     <h2>Créer une sortie</h2>
 
     <p>{{ app.user.site.nomSite }}</p>
+    {# Affiche le nom du site de l'utilisateur actuellement connecté #}
 
     <br>
-    <a href="{{ path('app_lieu_create') }}"><button type="button"  class="btn btn-outline-secondary">Ajouter un Lieu</button></a>
+    <a href="{{ path('app_lieu_create') }}"><button type="button" class="btn btn-outline-secondary">Ajouter un Lieu</button></a>
+    {# Lien vers la page de création de lieu avec un bouton "Ajouter un Lieu" #}
     <br>
-
 
     {{ form_start(sortieform) }}
+    {# Démarre le formulaire de sortie #}
     {{ form_widget(sortieform) }}
+    {# Affiche les widgets du formulaire de sortie #}
 
-
-    <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary">Enregistrer la Sortie</button>
-    <button type="submit" name="submitAction"  value="ouvrir" class="btn btn-outline-secondary">Ouvrir la sortie</button>
+    <button type="submit" name="submitAction" value="creer" class="btn btn-outline-secondary">Enregistrer la Sortie</button>
+    {# Bouton de soumission du formulaire avec l'action "creer" #}
+    <button type="submit" name="submitAction" value="ouvrir" class="btn btn-outline-secondary">Ouvrir la sortie</button>
+    {# Bouton de soumission du formulaire avec l'action "ouvrir" #}
     <a href="{{ path('app_home') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Retour</button></a>
+    {# Lien vers la page d'accueil avec un bouton "Retour" en cas d'annulation #}
 
     {{ form_end(sortieform) }}
-
-
+    {# Termine le formulaire de sortie #}
 
 {% endblock %}
+
+
