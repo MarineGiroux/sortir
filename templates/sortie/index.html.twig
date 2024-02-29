@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'bootstrap_5_layout.html.twig' %}
 
-{% block title %}Sortie index{% endblock %}
+{% block title %}Sortie.com{% endblock %}
 
 {% block body %}
 
@@ -95,7 +95,7 @@
                                 {% endif %}
                             {% endfor %}
 
-                            {% if not userIsRegistered and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now')) %}
+                            {% if not userIsRegistered and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now'))  %}
                                 <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
                             {% elseif userIsRegistered %}
                                 <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
