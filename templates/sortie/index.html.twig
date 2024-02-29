@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %}
 
-
 {% block title %}Sortie index{% endblock %}
 
 {% block body %}
@@ -37,7 +36,6 @@
                                 <th>Inscrits/places</th>
                                 <th>Etat</th>
                                 {# Si je suis déco je ne vois pas si je suis inscrit           #}
-
                                 {% if is_granted('IS_AUTHENTICATED')%}
                                     <th>Inscrit</th>
                                 {% endif %}
@@ -150,11 +148,8 @@
                     </table>
             </div>
 
-
-
             {% if is_granted('IS_AUTHENTICATED') %}
                 <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
             {% endif %}
-
 
 {% endblock %}
