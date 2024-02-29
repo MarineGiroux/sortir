@@ -71,7 +71,8 @@
                     {% else %}
                         <td>{{ sortie.etat.libelle }}</td>
                     {% endif %}
-                    {#  Si je suis co :                  #}
+                    {#  Verifier si au moins une occurence de l'user connecté dans la liste des participants,
+                    avec l'usage d'un flag, si flag == 1 => user participant à la sortie#}
                     {% if is_granted('IS_AUTHENTICATED') %}
                         <td>
                             {% set flag = 0 %}
@@ -97,7 +98,7 @@
                             <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
                         {% endif %}
 
-                        {#  Si l'état est ouverte et que je suis co :               #}
+                        {#  Une autre méthode pour vérifier si l'user participe à la sortie  #}
                         {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
                             {% set userIsRegistered = false %}
                             {% for user in sortie.users %}
@@ -125,7 +126,7 @@
                             {% endif %}
                         {% endif %}
 
-                        {#  Si je suis co :                  #}
+                        {#  Si je suis connecté et l'état est soit Créee soit Ouverte (fait partie d'une liste prédéfinie:                  #}
                         {% if is_granted('IS_AUTHENTICATED') %}
                             {#  Si l'état de la sortie est créée ou ouverte et que je suis orga : le bouton annuler apparait   #}
                             {% if sortie.etat.libelle in ['Créée', 'Ouverte'] and sortie.organisateur.id == app.user.id %}
