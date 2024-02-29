@@ -17,23 +17,31 @@ class LieuController extends AbstractController
     #[Route('/create', name: '_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager1, AddressApiService $addressApiService): Response
     {
+        $idSortie = @$request->get('idSortie');
         $lieu = new Lieu();
         $form1 = $this->createForm(LieuType::class, $lieu);
+        $form1->remove('latitude');
+        $form1->remove('longitude');
         $form1->handleRequest($request);
 
         if ($form1->isSubmitted() && $form1->isValid()) {
             $reponse = $addressApiService->geocodeAddress($lieu->getRue() . " " . $lieu->getVille()->getNomVille());
-//dd($reponse["features"][0]["geometry"]["coordinates"][0] );
-            $lieu->setLatitude($reponse["features"][0]["geometry"]["coordinates"][0]);
-            $lieu->setLongitude($reponse["features"][0]["geometry"]["coordinates"][1]);
+            $lieu->setLongitude($reponse["features"][0]["geometry"]["coordinates"][0]);
+            $lieu->setLatitude($reponse["features"][0]["geometry"]["coordinates"][1]);
             $entityManager1->persist($lieu);
             $entityManager1->flush();
 
-            return $this->redirectToRoute('app_sortie_create');
+            if ($idSortie){
+                return $this->redirectToRoute('app_sortie_update', ['id' => $idSortie]);
+            } else {
+                return $this->redirectToRoute('app_sortie_create');
+            }
         }
+
 
         return $this->render('sortie/createLieu.html.twig', [
             'lieuform' => $form1,
+            'idSortie' => $idSortie ?? false,
 
         ]);
     }

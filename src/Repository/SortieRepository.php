@@ -119,7 +119,9 @@ class SortieRepository extends ServiceEntityRepository
         if (!$user){
             $qb = $this->createQueryBuilder('sorties')
                 ->addSelect('users')
-                ->leftJoin('sorties.users', 'users');
+                ->leftJoin('sorties.users', 'users')
+                ->orderBy('sorties.dateHeureDebut', 'ASC')
+                ->setMaxResults(20);
             return $qb
                 ->getQuery()
                 ->getResult();
@@ -130,6 +132,8 @@ class SortieRepository extends ServiceEntityRepository
             ->leftJoin('sorties.users', 'users')
             ->andWhere('sorties.site = :site')
             ->setParameter('site', $user->getSite())
+            ->orderBy('sorties.dateHeureDebut', 'ASC')
+            ->setMaxResults(20)
         ;
         return $qb
             ->getQuery()

@@ -9,12 +9,16 @@
 
     <p>{{ app.user.site.nomSite }}</p>
 
+    <br>
+
+    <a href="{{ path('app_lieu_create', {'idSortie' : sortie.id }) }}"><button type="button"  class="btn btn-outline-secondary">Ajouter un Lieu</button></a>
+    <br>
+
     {{ form_start(sortieform) }}
     {{ form_widget(sortieform) }}
 
-    <a href="{{ path('app_lieu_create') }}"><button type="button"  class="btn btn-outline-secondary">Ajouter un Lieu</button></a>
-    <br>
-    <br>
+
+
 
     {% if sortie.etat.libelle != 'Ouverte' %}
     <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary"  >Enregistrer</button>

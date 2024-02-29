@@ -21,6 +21,10 @@ class SortieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('lieu', EntityType::class,[
+                'class' => Lieu::class,
+                'choice_label' => 'nomLieu',
+            ])
             ->add('nomSortie', TextType::class,[
                 'label' => 'Nom de la sortie :',
                 'label_attr' => ['class' => 'required-label'],
@@ -53,10 +57,7 @@ class SortieType extends AbstractType
                 'label' => 'Motif :',
                 'required' => false,
             ])
-            ->add('lieu', EntityType::class,[
-                'class' => Lieu::class,
-                'choice_label' => 'nomLieu',
-                ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
