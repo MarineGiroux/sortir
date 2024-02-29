@@ -32,38 +32,47 @@ class SortieController extends AbstractController
     #[Route('/create', name: '_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository, Security $security): Response
     {
+        // Crée une nouvelle instance de l'entité Sortie
         $sortie = new Sortie();
+
+        // Récupère le site associé à l'utilisateur actuellement connecté
         $site = $this->getUser()->getSite();
         $sortie->setSite($site);
 
+        // Crée un formulaire basé sur le type SortieType avec le site comme option
         $form = $this->createForm(SortieType::class, $sortie, ['site' => $site]);
+
+        // Supprime les champs 'site' et 'motif' du formulaire
         $form->remove('site');
         $form->remove('motif');
 
-
+        // Traite la requête HTTP pour remplir le formulaire avec les données soumises
         $form->handleRequest($request);
 
+        // Récupèration de l'utilisateur connecté
         $userRepository = $security->getUser();
         $sortie->setOrganisateur($userRepository);
 
-
-            if ($form->isSubmitted() && $form->isValid()
-            ) {
-
-                if( $request->request->get('submitAction') == 'creer'){
-                    $sortie->setEtat($etatRepository->find(1));
-                } else if ($request->request->get('submitAction') == 'ouvrir'){
-                    $sortie->setEtat($etatRepository->find(2));
-                }
-
-                $entityManager->persist($sortie);
-
-                $entityManager->flush();
-                return $this->redirectToRoute('app_home');
+        // Vérifie si le formulaire a été soumis et est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Détermine l'état de la sortie suivant le bouton sélectionné
+            if ($request->request->get('submitAction') == 'creer') {
+                $sortie->setEtat($etatRepository->find(1));
+            } else if ($request->request->get('submitAction') == 'ouvrir') {
+                $sortie->setEtat($etatRepository->find(2));
             }
 
+            // Persiste l'entité dans la base de données
+            $entityManager->persist($sortie);
+            // Applique les changements à la base de données
+            $entityManager->flush();
+
+            // Redirige vers la page d'accueil
+            return $this->redirectToRoute('app_home');
+        }
+        // Rend le template 'sortie/create.html.twig' avec le formulaire en cours
         return $this->render('sortie/create.html.twig', [
-            'sortieform' => $form ,
+            'sortieform' => $form,
         ]);
     }
 

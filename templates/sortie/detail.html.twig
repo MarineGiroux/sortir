@@ -2,6 +2,16 @@
 
 {% block title %}Détail de la sortie{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+{% endblock %}
+
 {% block body %}
 
     <h2>Détail de la sortie : {{ sortie.nomSortie }}</h2>
@@ -103,22 +113,61 @@
         </table>
     {% endif %}
 
-    {%  block buttons %}
-    {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
-        {% set flag = 0 %}
-        {% for user in sortie.users %}
-            {% if user.email == app.user.email %}
-                {% set flag = 1 %}
-            {% endif %}
-        {% endfor %}
+    <br>
 
-        {% if flag == 0 %}
-            <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-        {% else %}
-            <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
-        {% endif %}
+    <div id="map" style="height: 400px;"></div>
+
+    <br>
+
+    {%  block buttons %}
+        {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
+            {% set userIsRegistered = false %}
+            {% for user in sortie.users %}
+                {% if user.email == app.user.email %}
+                    {% set userIsRegistered = true %}
+                {% endif %}
+            {% endfor %}
+
+            {% if not userIsRegistered and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now')) %}
+                <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
+            {% elseif userIsRegistered %}
+                <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
+            {% endif %}
+
+            {% if not userIsRegistered and sortie.users|length >= sortie.nbInscriptionMax %}
+                <button type="button" class="btn btn-outline-secondary" disabled>Complet</button>
+            {% endif %}
+
+            {% if not userIsRegistered and sortie.getDateLimiteInscription < date('now') %}
+                <button type="button" class="btn btn-outline-secondary" disabled>Trop tard!</button>
+            {% endif %}
+
     {% endif %}
         <a href="{{ path('app_home') }}"><button type="button" class="btn btn-outline-danger">Retour</button></a>
     {% endblock %}
 
+    <script>
+        const sorties = [
+            { nom: "{{ sortie.nomSortie }}", latitude: {{ sortie.lieu.latitude }}, longitude: {{ sortie.lieu.longitude }} },
+        ];
+        // Utiliser les coordonnées de la première sortie pour centrer la carte
+        const centerCoordinates = [sorties[0].latitude, sorties[0].longitude];
+
+        // Initialisez la carte centrée sur les coordonnées de la première sortie
+        const map = L.map("map").setView(centerCoordinates, 13);
+
+        // Ajoutez une couche de tuiles OpenStreetMap à la carte
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "© OpenStreetMap contributors",
+        }).addTo(map);
+
+        // Ajoutez des marqueurs pour chaque sortie avec des informations de popup
+        sorties.forEach((sortie) => {
+            L.marker([sortie.latitude, sortie.longitude])
+                .addTo(map)
+                .bindPopup(`<b>${sortie.nom}</b><br>Latitude: ${sortie.latitude}<br>Longitude: ${sortie.longitude}`);
+        });
+    </script>
+
 {% endblock %}
+

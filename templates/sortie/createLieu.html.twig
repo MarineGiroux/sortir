@@ -7,14 +7,25 @@
 
     <h2>Créer un Lieu</h2>
 
+    <br>
+
+    {% if idSortie %}
+        <input type ="hidden" value={{idSortie}} name="idSortie">
+    {%  endif %}
+
+    <a href="{{ path('app_villes_create_sortie', {'idSortie' : idSortie }) }}"><button type="button"  class="btn btn-outline-secondary">Ajouter une Ville</button></a>
+
+    <br>
+
 
         {{ form_start(lieuform) }}
         {{ form_widget(lieuform) }}
-    <a href="{{ path('app_villes_create_sortie') }}"><button type="button"  class="btn btn-outline-secondary">Ajouter une Ville</button></a>
-    <br>
-    <br>
+
+
 
     <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary">Créer Un lieu</button>
+
+
     <a href="{{ path('app_sortie_create') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Retour</button></a>
 
     {{ form_end(lieuform) }}

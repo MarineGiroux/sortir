@@ -11,6 +11,11 @@
         {{ form_start(villeform) }}
         {{ form_widget(villeform) }}
 
+    <br>
+    {% if idSortie %}
+        <input type ="hidden" value={{idSortie}} name="idSortie">
+    {%  endif %}
+
     <button type="submit" name="submitAction"  value="creer"  class="btn btn-outline-secondary">Créer une Ville</button>
     <a href="{{ path('app_lieu_create') }}"><button type="button" name="annuler" class="btn btn-outline-danger">Retour</button></a>
 

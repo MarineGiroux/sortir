@@ -140,8 +140,6 @@ class SortieRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
-
 //    public function findOneBySomeField($value): ?Sortie
 //    {
 //        return $this->createQueryBuilder('s')

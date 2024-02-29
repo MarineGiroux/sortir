@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Form\SortieSearchType;
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,9 +21,19 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class UserController extends AbstractController
 {
     #[Route('/profile', name: '_profile')]
-    public function afficherProfil(): Response
+    public function afficherProfil(SortieRepository $sortieRepository, Request $request): Response
     {
-        return $this->render('user/profil.html.twig');
+        $user = $this->getUser();
+        $sorties = $sortieRepository->findAll();
+        $form = $this->createForm(SortieSearchType::class, $sorties,
+            ['nomSiteUser' => $user->getSite()->getNomSite(),
+            ]);
+        $form->handleRequest($request);
+
+        return $this->render('user/profil.html.twig', [
+            'sortie' => $sortieRepository->findAll(),
+            'form' => $form,
+        ]);
     }
 
     #[Route ('/profile/update', name: '_profile_update')]
