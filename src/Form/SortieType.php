@@ -64,10 +64,6 @@ class SortieType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Sortie::class,
             'site' => null,
-            'twig_theme' => [
-                'form/fields.html.twig', // Gabarit pour les widgets
-                'form/labels.html.twig', // Gabarit pour les labels
-            ],
         ]);
     }
 }

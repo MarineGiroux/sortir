@@ -2,16 +2,19 @@ html {
     height: 100%;
 }
 
-
 body {
     font-family : Helvetica;
     height: 100%;
     margin: 0;
     padding: 0;
-
-
+    background-color: #FFD4BF1E;
 }
 
+.main-ctn{
+    padding: 0%;
+    background-color: rgba(255, 212, 191, 0.12);
+
+}
 footer{
     /*position:fixed;*/
     /*left:0px;*/
@@ -40,6 +43,7 @@ footer{
     box-shadow: 3px 3px 2px 0px #E2E2E2;
     transition: .3s ease;
 }
+
 
 .navbar  {
 
@@ -73,4 +77,12 @@ footer{
 
 .h2-profil{
     text-align: center;
+}
+thead{
+    background-color: #f2c9b1 !important;
+
+}
+.custom-th{
+    background-color: #f2c9b1 !important;
+
 }

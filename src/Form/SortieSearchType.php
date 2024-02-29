@@ -94,7 +94,9 @@ class SortieSearchType extends AbstractType
                 'label'=>"Sorties passées"
             ])
             ->add('submit', SubmitType::class,[
-                'label'=>"Rechercher"
+                'label'=>"Rechercher",
+                'form_attr' => true,
+                'attr'=>['class'=>'btn btn-primary']
 
             ])
         ;
