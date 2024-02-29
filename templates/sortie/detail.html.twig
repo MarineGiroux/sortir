@@ -2,6 +2,16 @@
 
 {% block title %}Détail de la sortie{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+{% endblock %}
+
 {% block body %}
 
     <h2>Détail de la sortie : {{ sortie.nomSortie }}</h2>
