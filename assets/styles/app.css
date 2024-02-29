@@ -41,21 +41,13 @@ body {
 
 
 
-.ligne{
+.table-ctn{
     width: 100%;
-
-}
-.colonne1{
-    float: left;
-    width: 75%;
-    overflow-x: auto
-}
-.colonne2{
-    float: right;
-    width: 25%;
     overflow-x: auto
 
 }
+
+
 
 #fixedHeight {
     line-height: 25px;
