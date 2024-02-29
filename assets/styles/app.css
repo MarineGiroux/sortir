@@ -38,11 +38,11 @@ body {
 }
 
 .main-ctn {
-    margin-top: 10%;
-    margin-bottom:  10%;
+    /*margin-top: 2%;*/
+    /*margin-bottom:  2%;*/
 
     height: 90%;
-    width: 90%;
+    width: 95%;
     border-style: none;
     border-width: thin;
     display: flex;
@@ -50,7 +50,7 @@ body {
     align-items: center;
     box-sizing: content-box;
     flex-direction: column;
-    padding: 5%;
+    padding: 10%;
     position: relative;
     background-color: rgba(255, 255, 255, 0.6); /* Couleur de fond avec opacité */
 }
@@ -103,7 +103,7 @@ footer > div{
 .navbar  {
 
     background-color: #f2c9b1;
-    font-size: 15px;
+    /*font-size: 15px;*/
 
 }
 
