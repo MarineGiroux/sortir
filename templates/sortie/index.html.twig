@@ -96,7 +96,7 @@
                                             <td class="fitwidth">{{ sortie.organisateur.pseudo }}</td>
                                             <td class="fitwidth">
 
-                                        <div class="btn-group d-flex flex-column flex-md-row" role="group" aria-label="Basic example">
+                                        <div class="btn-group d-flex flex-md-row" role="group" aria-label="Basic example">
 
                                             {#  Bouton afficher apparait dans tous les cas !  #}
                                             <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-info">Afficher</a>                                            {#  Si je suis authentifié que je suis orga et que l'état est créée ou ouverte alors afficher le bouton Modifier                 #}
@@ -150,7 +150,7 @@
 
             <br>
             {% if is_granted('IS_AUTHENTICATED') %}
-                <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
+                <a href="{{ path('app_sortie_create') }}" class="btn btn-secondary text-blc" id="text-blc">Créer une sortie</a>
             {% endif %}
 
 {% endblock %}
