@@ -11,7 +11,9 @@
         {% if app.user.photo is not empty %}
             <img src="{{ asset(photo_dir ~ '/' ~ app.user.photo) }}" class="photo-profil" width="300px" loading="lazy" />
         {% else %}
-            <img src="{{ asset('img/avatar.jpg') }}" class="photo-profil" width="300px" loading="lazy" />
+            <div>
+                <img src="{{ asset('img/avatar.jpg') }}" class="photo-profil" width="90%" loading="lazy" />
+            </div>
         {% endif %}
 
         <ul class="list-group list-group-flush ">
