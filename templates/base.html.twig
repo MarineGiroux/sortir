@@ -20,7 +20,7 @@
         <style>
             .navbar-vertical {
                 height: 100vh; /* Pleine hauteur de l'écran */
-                background-color: #f2c9b1; /* Couleur de fond */
+                background-color: red; /* Couleur de fond */
             }
         </style>
     {% endblock %}
@@ -30,9 +30,7 @@
 <body class="fs-6" style="background-image: url('{{ asset('img/paysage.svg') }}');">
 <header>
     {% include('navbar.html.twig') %}
-{#    {% if is_granted('ROLE_ADMIN') %}#}
-{#    {% include('admin/navbarVerticale.html.twig') %}#}
-{#{% endif %}#}
+
 </header>
 
 <main class="flex-grow-1">

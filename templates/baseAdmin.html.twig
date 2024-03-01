@@ -1,89 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}Sortir.com{% endblock %}</title>
-    <link rel="icon" href="{{ asset("img/favicon.png") }}">
-    {% block stylesheets %}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-    {% endblock %}
-    {% block javascripts %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    {% endblock %}
+{% extends 'base.html.twig' %}
 
-    {% block navbarVertical %}
-        <style>
-        .navbar-vertical {
-            height: 100vh; /* Pleine hauteur de l'écran */
-            background-color: #f8f9fa; /* Couleur de fond */
-        }
-    </style>
-    {% endblock %}
+{% block body %}
 
-{#*************------------- REMARQUE --------------------------------------*******#}
+<div class="d-flex flex-column">
+    <header>
+        {% include('navbar.html.twig') %}
 
-{#cette base html  contient la navBar verticale. à mettre (à la place de base.html.twig) pour  afficher la navbar verticale quand l'admin est connecté (exp : dans les pages de dashboard) #}
+    </header>
+
+    <main class="flex-grow-1">
 
 
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="col-md-2 d-none d-md-block bg-transparent sidebar navbar-vertical border border-dark ">
+                    <div class="sidebar-sticky">
+                        <h4>Dashboard</h4>
+                        <ul class="nav flex-column">
 
-</head>
+                            <li class="nav-item"><a class="nav-link active" href="{{ path('app_dashboard_users') }}">
+                                    Afficher Utilisateur</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_dashboard-sortie') }}"> Afficher sorties</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_villes_list') }}"> Gérer les villes</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('app_sites') }}"> Gérer les sites</a></li>
+                        </ul>
+                    </div>
+                </nav>
 
-<body class="d-flex flex-column">
-<header>
-    {% include('navbar.html.twig') %}
-{#    {% if is_granted('ROLE_ADMIN') %}#}
-{#    {% include('admin/navbarVerticale.html.twig') %}#}
-{#{% endif %}#}
-</header>
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                    {% endif %}
 
-<main class="flex-grow-1">
+                    {% block body2 %}
 
-
-    {% if is_granted('ROLE_ADMIN') %}
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar navbar-vertical">
-                <div class="sidebar-sticky">
-                    <h4>Dashboard</h4>
-                    <ul class="nav flex-column">
-
-                        <li class="nav-item"><a class="nav-link active" href="{{ path('app_dashboard_users') }}"> Afficher Utilisateur</a></li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_dashboard-sortie') }}"> Afficher sorties</a></li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_villes_list') }}"> Gérer les villes</a></li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_sites') }}"> Gérer les sites</a></li>
-                    </ul>
-                </div>
-            </nav>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                {% endif %}
-
-                {% block body %}
-
-                {% endblock %}
+                    {% endblock %}
 
 
-                {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('ROLE_ADMIN') %}
 
-            </main>
+                </main>
+            </div>
         </div>
-    </div>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-{% endif %}
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        {% endif %}
 
-</main>
+    </main>
 
-<footer class="bg-body-tertiary text-center text-lg-start">
-    <div class="text-center p-3" style="background-color: #89967680;">
-        &copy; sortir.com {{ "now"|date("Y") }}
-    </div>
-</footer>
-</body>
-</html>
+    <footer class="bg-body-tertiary text-center text-lg-start">
+        <div class="text-center p-3" style="background-color: #89967680;">
+            &copy; sortir.com {{ "now"|date("Y") }}
+        </div>
+    </footer>
+</div>
+{% endblock %}
