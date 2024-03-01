@@ -44,7 +44,7 @@ class LieuController extends AbstractController
 
         return $this->render('sortie/createLieu.html.twig', [
             'lieuform' => $form1,
-
+            'idSortie' => $idSortie,
         ]);
     }
 
