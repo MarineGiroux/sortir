@@ -99,10 +99,10 @@
                                         <div class="btn-group d-flex flex-column flex-md-row" role="group" aria-label="Basic example">
 
                                             {#  Bouton afficher apparait dans tous les cas !  #}
-                                            <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Afficher</a>                                            {#  Si je suis authentifié que je suis orga et que l'état est créée ou ouverte alors afficher le bouton Modifier                 #}
+                                            <a href="{{ path('app_sortie_detail', {'id': sortie.id}) }}" type="button" class="btn btn-outline-info">Afficher</a>                                            {#  Si je suis authentifié que je suis orga et que l'état est créée ou ouverte alors afficher le bouton Modifier                 #}
 
                                             {% if is_granted('IS_AUTHENTICATED') and app.user.email == sortie.organisateur.email and sortie.etat.libelle in ['Créée', 'Ouverte']%}
-                                                <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-secondary">Modifier</a>
+                                                <a href="{{ path('app_sortie_update', {'id': sortie.id}) }}" type="button" class="btn btn-outline-warning">Modifier</a>
                                             {% endif %}
 
                                             {% if sortie.etat.libelle == 'Ouverte' and is_granted('IS_AUTHENTICATED')  %}
@@ -148,6 +148,7 @@
                     </table>
             </div>
 
+            <br>
             {% if is_granted('IS_AUTHENTICATED') %}
                 <a href="{{ path('app_sortie_create') }}" class="btn btn-outline-secondary">Créer une sortie</a>
             {% endif %}
