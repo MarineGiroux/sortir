@@ -115,7 +115,7 @@
                                                 {#  Une autre méthode pour vérifier si l'user participe à la sortie  #}
                                                 {% if flag == 0 and (sortie.users|length < sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now'))  %}
                                                     <a href="{{ path('app_inscription', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">S'inscrire</button></a>
-                                                {% elseif  flag == 1 and (sortie.users|length == sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now')) %}
+                                                {% elseif  flag == 1 and (sortie.users|length <= sortie.nbInscriptionMax and sortie.getDateLimiteInscription > date('now')) %}
                                                     {#  Sinon si je suis déja enregistré le bouton se désinscrire apparait     #}
                                                     <a href="{{ path('app_desistement', {'id': sortie.id, 'etatSortie':sortie.etat.libelle }) }}"><button type="button" class="btn btn-outline-primary">Se Désister</button></a>
                                                 {% endif %}

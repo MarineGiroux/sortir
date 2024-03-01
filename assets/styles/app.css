@@ -150,5 +150,5 @@ footer > div{
 .photo-profil{
     box-sizing: content-box;
     display: block;
-    max-width: 300px;
+    max-width: 100%;
 }
