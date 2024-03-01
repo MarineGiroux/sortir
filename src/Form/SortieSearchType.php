@@ -96,7 +96,7 @@ class SortieSearchType extends AbstractType
             ])
             ->add('submit', SubmitType::class,[
                 'label'=>"Rechercher",
-                'form_attr' => true,
+//                'form_attr' => true,
                 'attr'=>['class'=>'btn btn-secondary']
 
             ])
