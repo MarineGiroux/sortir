@@ -133,7 +133,7 @@ class SortieRepository extends ServiceEntityRepository
             ->andWhere('sorties.site = :site')
             ->setParameter('site', $user->getSite())
             ->orderBy('sorties.dateHeureDebut', 'ASC')
-            ->setMaxResults(20)
+            ->setMaxResults(20);
         ;
         return $qb
             ->getQuery()

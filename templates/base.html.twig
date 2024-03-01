@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}Sortir.com{% endblock %}</title>
     <link rel="icon" href="{{ asset("img/favicon.png") }}">
-
-
 
     {% block stylesheets %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -20,21 +18,16 @@
 
     {% block navbarVertical %}
         <style>
-        .navbar-vertical {
-            height: 100vh; /* Pleine hauteur de l'écran */
-            background-color: #f8f9fa; /* Couleur de fond */
-        }
-    </style>
+            .navbar-vertical {
+                height: 100vh; /* Pleine hauteur de l'écran */
+                background-color: #f2c9b1; /* Couleur de fond */
+            }
+        </style>
     {% endblock %}
-
-
-
-
-
 
 </head>
 
-<body class="d-flex flex-column">
+<body class="fs-6" style="background-image: url('{{ asset('img/paysage.svg') }}');">
 <header>
     {% include('navbar.html.twig') %}
 {#    {% if is_granted('ROLE_ADMIN') %}#}
@@ -43,19 +36,17 @@
 </header>
 
 <main class="flex-grow-1">
-
-
-
-
+    <div class="container-md align-items-center main-ctn" >
+        <div class="container-md secondary-ctn">
                 {% block body %}
 
                 {% endblock %}
-
-
+        </div>
+    </div>
 </main>
 
-<footer class="bg-body-tertiary text-center text-lg-start">
-    <div class="text-center p-3" style="background-color: #89967680;">
+<footer class="bg-body-tertiary text-center text-lg-start fixed-bottom">
+    <div class="text-center p-3" >
         &copy; sortir.com {{ "now"|date("Y") }}
     </div>
 </footer>

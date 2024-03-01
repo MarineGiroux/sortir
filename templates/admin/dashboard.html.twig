@@ -4,6 +4,7 @@
 
 {% block body %}
 
+
     <h1>Dashboard administrateur {{ app.user.pseudo }} </h1>
 
 
@@ -14,6 +15,8 @@
     <h3><a href="{{ path('app_dashboard-sortie') }}"> Afficher sorties</a></h3>
     <h3><a href="{{ path('app_villes_list') }}"> Gérer les villes</a></h3>
     <h3><a href="{{ path('app_sites') }}"> Gérer les sites</a></h3>
+
+
 
 {% endblock %}
  {% block title %}{{ parent() }} | Dashboard{% endblock %}

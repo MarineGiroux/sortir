@@ -1,14 +1,15 @@
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid ">
+        <img class="logo-navbar" src="{{ asset('img/logo.png') }}" width="50" height="50" alt="Logo Sortir" class="d-inline-block align-text-top">
         <a href="{{ path('app_home') }}" title="Go back to homepage" class = "titre-nav" >Sortir.com </a>
-{#        <img class="logo-navbar" src="{{ asset('img/logo.svg') }}" alt="Bucket-List Logo">#}
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-fill">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_home') }}" title="Go back to homepage"> Accueil </a>
                 </li>
@@ -20,7 +21,7 @@
 
 {#             CAS 1 :   afficher si l'utilasateur est  connecté #}
                 {% if is_granted('IS_AUTHENTICATED') %}
-                    <li class="nav-item">
+                    <li class="nav-item flex-fill">
                         <a class="nav-link" href="{{ path('app_logout') }}" title="Go back to homepage"> Se déconnecter </a>
                     </li>
                 {% endif %}

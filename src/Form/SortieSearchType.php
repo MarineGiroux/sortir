@@ -36,6 +36,10 @@ class SortieSearchType extends AbstractType
                 'class' => Site::class,
                 'choice_label' => 'nomSite',
                 'label'=>false,
+                'row_attr'=>[
+                    'class'=>' bg-light text-dark',
+                ],
+
 
             ])
             ->add('nomSortieContient', SearchType::class,[
@@ -65,9 +69,10 @@ class SortieSearchType extends AbstractType
             'label'=>'Inscrit ou Non ?',
             'mapped'=>false,
             'choices'=>[
+                'Inscrit + non inscrit : '=>'InscritOuNonInscrit',
                 'Inscrit : '=>'inscrit',
                 'Non Inscrit : '=>'nonInscrit',
-                'Inscrit + non inscrit : '=>'InscritOuNonInscrit',
+
             ]
         ])
 //            ->add('inscrit', CheckboxType::class,[
@@ -90,7 +95,9 @@ class SortieSearchType extends AbstractType
                 'label'=>"Sorties passées"
             ])
             ->add('submit', SubmitType::class,[
-                'label'=>"Rechercher"
+                'label'=>"Rechercher",
+                'form_attr' => true,
+                'attr'=>['class'=>'btn btn-primary']
 
             ])
         ;
