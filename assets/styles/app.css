@@ -146,3 +146,9 @@ footer > div{
 #text-blc{
     color: white;
 }
+
+.photo-profil{
+    box-sizing: content-box;
+    display: block;
+    max-width: 100%;
+}
