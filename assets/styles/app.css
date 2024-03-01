@@ -38,12 +38,18 @@ body {
     background-attachment: fixed;
 }
 
+main{
+    margin-top: 20%;
+    margin-bottom: 20%;
+
+}
+
 .main-ctn {
     /*margin-top: 2%;*/
     /*margin-bottom:  2%;*/
-
+    margin: 10px;
     height: 90%;
-    width: 95%;
+    width: 90%;
     border-style: none;
     border-width: thin;
     display: flex;
@@ -51,7 +57,7 @@ body {
     align-items: center;
     box-sizing: content-box;
     flex-direction: column;
-    padding: 7%;
+    /*padding: 7%;*/
     position: relative;
     background-color: rgba(255, 255, 255, 0.6); /* Couleur de fond avec opacité */
 }
@@ -68,7 +74,7 @@ body {
 }
 
 .secondary-ctn {
-    padding: 2%;
+    padding: 5%;
     background-color: rgba(255, 212, 191, 0.8); /* Couleur de fond avec opacité */
     border-radius: 35px;
     border-style: solid;
@@ -133,4 +139,8 @@ footer > div{
 
 .h2-profil{
     text-align: center;
+}
+
+#text-blc{
+    color: white;
 }
