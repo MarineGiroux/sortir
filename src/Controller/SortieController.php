@@ -39,7 +39,7 @@ class SortieController extends AbstractController
         $site = $this->getUser()->getSite();
         $sortie->setSite($site);
 
-        // Crée un formulaire basé sur le type SortieType avec le site comme option
+        // Créer un formulaire basé sur le type SortieType avec le site comme option
         $form = $this->createForm(SortieType::class, $sortie, ['site' => $site]);
 
         // Supprime les champs 'site' et 'motif' du formulaire

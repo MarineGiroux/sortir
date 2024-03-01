@@ -52,7 +52,7 @@ class SortieListener
             }
 
         //  Si la date début est < à la date actuelle
-        } else if ($sortie->getDateHeureDebut() < $heureActuelle) {
+        } else if ($heureDeFinInt < $heureActuelleInt) {
             // Récupération de l'état "Passée" depuis le référentiel des états
             $etatPassee = $this->etatRepository->findOneBy(['id' => '5']);
             // Si la sortie est pas déjà Passée : mettre à l'état Passée
